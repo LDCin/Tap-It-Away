@@ -13,15 +13,6 @@ public class Cube : MonoBehaviour
     private MaterialPropertyBlock cubeMaterialPropertyBlock;
     private Bounds cubeBound;
     private float subOffset = 0.002f;
-    // private readonly List<Vector3> faceDirectionList = new()
-    // {
-    //     Vector3.up,
-    //     Vector3.down,
-    //     Vector3.left,
-    //     Vector3.right,
-    //     Vector3.forward,
-    //     Vector3.back
-    // };
     private List<QuadConfig> quadConfigList;
     private List<ArrowQuad> quadList;
     [SerializeField] private ArrowQuad arrowQuadPrefab;
@@ -35,21 +26,34 @@ public class Cube : MonoBehaviour
     }
     private void Start()
     {
-        Init(cubeDataTest);
+        InitBySO(cubeDataTest);
     }
-    private void Init(CubeData cubeData)
+    private void InitBySO(CubeData cubeData)
     {
         cubeDirection = cubeData.cubeDirection;
         SetColor(cubeData.cubeColor);
         quadConfigList = GetQuadConfigs(cubeData.cubeDirection);
-        InitVisual();
+        InitVisual(cubeData.symbolColor);
     }
-    private void InitVisual()
+    private void InitVisual(Color symbolColor)
     {
-        foreach (var quadConfig in quadConfigList)
+        Vector3 moveDirection = GetDirectionVector(cubeDirection);
+
+        foreach (QuadConfig quadConfig in quadConfigList)
         {
+            float dot = Vector3.Dot(quadConfig.faceDirection.normalized, moveDirection.normalized);
+
+            if (dot < -0.999f)
+            {
+                continue;
+            }
+
             Vector3 quadPosition = CalculateArrowQuadPosition(cubeBound, quadConfig.faceDirection, subOffset);
-            CreateArrowQuad(quadConfig, arrowQuadPrefab, transform, quadPosition);
+
+            ArrowQuad arrowQuad = CreateArrowQuad(quadConfig, arrowQuadPrefab, transform, quadPosition);
+
+            bool isArrow = dot < 0.999f;
+            arrowQuad.Init(symbolColor, isArrow);
         }
     }
     private Vector3 CalculateArrowQuadPosition(Bounds cubeBound, Vector3 faceDirection, float subOffset)
@@ -66,11 +70,7 @@ public class Cube : MonoBehaviour
         arrowQuad.name = quadConfig.quadName;
         arrowQuad.transform.localPosition = positionOnCube;
 
-        arrowQuad.transform.localRotation =
-            Quaternion.LookRotation(
-                quadConfig.faceDirection,
-                quadConfig.upDirection
-            );
+        arrowQuad.transform.localRotation = Quaternion.LookRotation(quadConfig.faceDirection, quadConfig.upDirection);
 
         quadList.Add(arrowQuad);
 
@@ -171,31 +171,7 @@ public class Cube : MonoBehaviour
     }
     public void Move()
     {
-        Vector3 directionVector = Vector3.zero;
-        switch (cubeDirection)
-        {
-            case CubeDirection.Up:
-                directionVector = Vector3.up;
-                break;
-            case CubeDirection.Down:
-                directionVector = Vector3.down;
-                break;
-            case CubeDirection.Left:
-                directionVector = Vector3.left;
-                break;
-            case CubeDirection.Right:
-                directionVector = Vector3.right;
-                break;
-            case CubeDirection.Forward:
-                directionVector = Vector3.forward;
-                break;
-            case CubeDirection.Back:
-                directionVector = Vector3.back;
-                break;
-            default:
-                Debug.Log("No direction founded");
-                break;
-        }
+        Vector3 directionVector = GetDirectionVector(cubeDirection);
         transform.DOMove(transform.position + directionVector * moveDistance, moveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
         {
             Destroy(gameObject);

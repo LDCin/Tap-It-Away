@@ -5,4 +5,5 @@ public class CubeData : ScriptableObject
 {
     public CubeDirection cubeDirection;
     public Color cubeColor;
+    public Color symbolColor;
 }

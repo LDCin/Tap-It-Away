@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1905884161164844a8bae4cf4948d51, type: 3}
   m_Name: Cube Data
   m_EditorClassIdentifier: Assembly-CSharp::CubeData
-  cubeDirection: 1
-  cubeColor: {r: 1, g: 0.93506396, b: 0, a: 0}
+  cubeDirection: 2
+  cubeColor: {r: 1, g: 1, b: 1, a: 1}
+  symbolColor: {r: 0, g: 0, b: 0, a: 1}
