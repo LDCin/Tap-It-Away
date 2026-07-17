@@ -605,6 +605,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cube
   moveDuration: 0.5
   moveDistance: 10
+  cubeDirection: 0
+  cubeDataTest: {fileID: 11400000, guid: 985f840de8c58b042b0074e0f9d6d903, type: 2}
+  arrowQuadPrefab: {fileID: 4065582104161147219, guid: 011cbd0651dbe084fba162a917693c7d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -612,5 +615,5 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 1438450279}
   - {fileID: 678289908}
+  - {fileID: 1438450279}
