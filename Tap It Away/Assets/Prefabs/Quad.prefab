@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5582474855345266383}
+  - component: {fileID: 4065582104161147219}
   - component: {fileID: 4937096411047404142}
   - component: {fileID: 2368509598684660188}
-  - component: {fileID: 4065582104161147219}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -34,6 +34,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4065582104161147219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428457685966344680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 644d6a9a2e36da94e9fb0e7ff7e7bd3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArrowQuad
+  arrow: {fileID: 2800000, guid: 79b16c085a6e6cf40b5c4e6fa22ab142, type: 3}
+  circle: {fileID: 2800000, guid: b7b3de299421a83418a0d1ede4728d1b, type: 3}
 --- !u!33 &4937096411047404142
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -91,17 +105,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4065582104161147219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428457685966344680}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c69bce6986d3f048adb1760188eb98e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ArrowQuad
-  arrow: {fileID: 2800000, guid: 79b16c085a6e6cf40b5c4e6fa22ab142, type: 3}
-  circle: {fileID: 2800000, guid: b7b3de299421a83418a0d1ede4728d1b, type: 3}

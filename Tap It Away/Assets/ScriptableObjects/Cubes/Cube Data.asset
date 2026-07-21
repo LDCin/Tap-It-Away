@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1905884161164844a8bae4cf4948d51, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ec9bb7f788efeb489387d9895277acc, type: 3}
   m_Name: Cube Data
   m_EditorClassIdentifier: Assembly-CSharp::CubeData
-  cubeDirection: 2
-  cubeColor: {r: 1, g: 1, b: 1, a: 1}
-  symbolColor: {r: 0, g: 0, b: 0, a: 1}
+  cubeDirection: 0
+  cubeColor: {r: 0, g: 0, b: 0, a: 0}
+  symbolColor: {r: 0, g: 0, b: 0, a: 0}

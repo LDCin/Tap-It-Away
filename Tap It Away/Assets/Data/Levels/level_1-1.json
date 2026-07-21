@@ -1,0 +1,21 @@
+{
+  "board": {
+    "sizeX": 4,
+    "sizeY": 4,
+    "sizeZ": 4
+  },
+  "cubes": [
+    {
+      "position": { "x": 0, "y": 0, "z": 0 },
+      "moveDirection": "right",
+      "cubeColor": "#4CC9F0",
+      "symbolColor": "#FFFFFF"
+    },
+    {
+      "position": { "x": 0, "y": 1, "z": 0 },
+      "moveDirection": "left",
+      "cubeColor": "#4CC9F0",
+      "symbolColor": "#FFFFFF"
+    }
+  ]
+}
