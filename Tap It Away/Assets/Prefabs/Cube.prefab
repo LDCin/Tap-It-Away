@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47fd0763e13dce44ab564e6a910f5fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CubeMover
-  moveDuration: 5
+  moveSpeed: 10
   moveDistance: 50
   isBlocked: 0
 --- !u!33 &1843407296425381156
@@ -172,7 +172,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!1 &2038429946500257838
 GameObject:
   m_ObjectHideFlags: 0

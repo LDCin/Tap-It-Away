@@ -535,10 +535,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a157eccd66845e4688b7c42fc5480d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
-  levelDataFile: {fileID: 0}
   cubePrefab: {fileID: 4705002411133471821, guid: 46dc9a54b5aaba04fa0390ff56ea3e1b, type: 3}
   spawnRoot: {fileID: 934567464}
-  levelEachMap: 10
 --- !u!1 &678289907
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,6 +629,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   levelLoader: {fileID: 548864356}
   userData: {fileID: 4900000, guid: 9ba3953e483d72e42a0eb781513ac90a, type: 3}
+  levelDataFile: {fileID: 0}
+  useLevelFileToTest: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

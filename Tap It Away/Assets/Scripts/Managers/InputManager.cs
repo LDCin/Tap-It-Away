@@ -13,10 +13,12 @@ public class InputManager : MonoBehaviour {
                 ShootRaycast(touch.position);
             }
         }
+#if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
             ShootRaycast(Input.mousePosition);
         }
+#endif
     }
     private void ShootRaycast(Vector2 screenPosition)
     {

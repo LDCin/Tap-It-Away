@@ -9,8 +9,9 @@ public class Cube : MonoBehaviour
     [SerializeField] private CubeDirection cubeDirection = CubeDirection.Forward;
     [SerializeField] private ArrowQuadGenerator arrowQuadGenerator;
     [SerializeField] private CubeMover cubeMover;
-    private Vector3 positionInWorld;
     private MeshRenderer meshRenderer;
+    private Rigidbody rb;
+    private Vector3 positionInWorld;
     private readonly int BaseColorID = Shader.PropertyToID("_BaseColor");
     private MaterialPropertyBlock cubeMaterialPropertyBlock;
     private Bounds cubeBound;
@@ -19,6 +20,7 @@ public class Cube : MonoBehaviour
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        rb = GetComponent<Rigidbody>();
         cubeBound = meshRenderer.localBounds;
         quadList = new List<ArrowQuad>();
         cubeMaterialPropertyBlock = new();
@@ -34,6 +36,7 @@ public class Cube : MonoBehaviour
     public void InitByCubeData(CubeData cubeData)
     {
         cubeDirection = cubeData.moveDirection;
+        FreezePosition();
         cubeMover.CubeDirection = cubeDirection;
         positionInWorld = cubeData.position;
         transform.position = positionInWorld;
@@ -81,5 +84,20 @@ public class Cube : MonoBehaviour
             arrowQuad.Init(symbolColor, isArrow);
         }
     }
-    
+    private void FreezePosition()
+    {
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        if (cubeDirection == CubeDirection.Left || cubeDirection == CubeDirection.Right)
+        {
+            rb.constraints |= RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+        }
+        else if (cubeDirection == CubeDirection.Up || cubeDirection == CubeDirection.Down)
+        {
+            rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        }
+        else if (cubeDirection == CubeDirection.Forward || cubeDirection == CubeDirection.Back)
+        {
+            rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY;
+        }
+    }
 }

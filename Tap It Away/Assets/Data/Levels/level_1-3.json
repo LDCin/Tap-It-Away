@@ -6,7 +6,7 @@
   },
   "cubes": [
     {
-      "position": { "x": 0, "y": 0, "z": 0 },
+      "position": { "x": -3, "y": 0, "z": 0 },
       "moveDirection": "Right",
       "cubeColor": "#4CC9F0",
       "symbolColor": "#FFFFFF"
@@ -24,8 +24,14 @@
       "symbolColor": "#1B1B1B"
     },
     {
-      "position": { "x": 2, "y": 1, "z": 0 },
+      "position": { "x": 1, "y": 1, "z": 0 },
       "moveDirection": "Left",
+      "cubeColor": "#FFD166",
+      "symbolColor": "#1B1B1B"
+    },
+    {
+      "position": { "x": 1, "y": 2, "z": 0 },
+      "moveDirection": "Right",
       "cubeColor": "#FFD166",
       "symbolColor": "#1B1B1B"
     }
