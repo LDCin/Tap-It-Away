@@ -584,6 +584,8 @@ MonoBehaviour:
   mainCamera: {fileID: 330585545}
   raycastDistance: 100
   dragThreshHold: 20
+  rotateSensitivity: 1
+  puzzleRoot: {fileID: 934567465}
   cubeLayer:
     serializedVersion: 2
     m_Bits: 64

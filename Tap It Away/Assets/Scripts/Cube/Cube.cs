@@ -87,17 +87,5 @@ public class Cube : MonoBehaviour
     private void FreezePosition()
     {
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        if (cubeDirection == CubeDirection.Left || cubeDirection == CubeDirection.Right)
-        {
-            rb.constraints |= RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
-        }
-        else if (cubeDirection == CubeDirection.Up || cubeDirection == CubeDirection.Down)
-        {
-            rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-        }
-        else if (cubeDirection == CubeDirection.Forward || cubeDirection == CubeDirection.Back)
-        {
-            rb.constraints |= RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY;
-        }
     }
 }

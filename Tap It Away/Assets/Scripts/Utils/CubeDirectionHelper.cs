@@ -30,4 +30,9 @@ public static class CubeDirectionHelper
             _ => Vector3.zero,
         };
     }
+
+    public static Vector3 GetWorldDirection(CubeDirection direction, Transform transform)
+    {
+        return transform.TransformDirection(GetDirectionVector(direction)).normalized;
+    }
 }

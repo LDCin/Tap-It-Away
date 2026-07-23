@@ -5,6 +5,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private float raycastDistance = 100f;
     [SerializeField] private float dragThreshHold = 20f;
+    [SerializeField] private float rotateSensitivity = 1f;
+    [SerializeField] private Transform puzzleRoot;
     [SerializeField] LayerMask cubeLayer;
     private Vector2 touchBeganPosition;
     private bool isDragging = false;
@@ -70,7 +72,7 @@ public class InputManager : MonoBehaviour
         }
         if (isDragging)
         {
-            RotatePuzzleBlock();
+            RotatePuzzleBlock(touch.deltaPosition);
         }
     }
     private void HandleTouchEnded(Touch touch)
@@ -86,8 +88,12 @@ public class InputManager : MonoBehaviour
         selectedCube = null;
         isDragging = false;
     }
-    private void RotatePuzzleBlock()
+    private void RotatePuzzleBlock(Vector2 touchDelta)
     {
+        float horizontalAngle = -touchDelta.x * rotateSensitivity;
+        float verticalAngle = touchDelta.y * rotateSensitivity;
 
+        puzzleRoot.Rotate(Vector3.up, horizontalAngle, Space.World);
+        puzzleRoot.Rotate(mainCamera.transform.right, verticalAngle, Space.World);
     }
 }

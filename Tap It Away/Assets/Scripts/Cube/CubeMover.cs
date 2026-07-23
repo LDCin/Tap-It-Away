@@ -1,6 +1,8 @@
 using UnityEngine;
 using DG.Tweening;
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 
 public class CubeMover : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class CubeMover : MonoBehaviour
     [SerializeField] private float moveDistance = 50;
     [SerializeField] private float collisionSkin = 0.02f;
     [SerializeField] private bool isBlocked = false;
+    [SerializeField] private float delayActionTime = 1f;
     public CubeDirection CubeDirection { get; set; }
     public Vector3 StartPosition { get; set; }
     public bool IsMoving => isMoving;
@@ -21,16 +24,20 @@ public class CubeMover : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
     }
-    public void Move(Vector3 position, Action onMoveComplete = null)
+    private void Move(Vector3 position, Action onMoveComplete = null)
     {
-        float duration = Vector3.Distance(transform.position, position) / moveSpeed;
-        tween?.Kill();
         isBlocked = false;
         isMoving = true;
-        tween = rb.DOMove(position, duration).SetEase(Ease.OutQuad).SetUpdate(UpdateType.Fixed).OnComplete(() =>
+
+        tween?.Kill();
+        float duration = Vector3.Distance(transform.position, position) / moveSpeed;
+        tween = rb.DOMove(position, duration)
+        .SetEase(Ease.OutQuad)
+        .SetUpdate(UpdateType.Fixed)
+        .OnComplete(() =>
         {
             tween = null;
-            isMoving = false;
+            StartCoroutine(DelayTouch(delayActionTime));
             onMoveComplete?.Invoke();
         });
     }
@@ -40,7 +47,8 @@ public class CubeMover : MonoBehaviour
         {
             return;
         }
-        Vector3 directionVector = CubeDirectionHelper.GetDirectionVector(CubeDirection);
+        StartPosition = transform.position;
+        Vector3 directionVector = CubeDirectionHelper.GetWorldDirection(CubeDirection, transform);
         Move(transform.position + directionVector * moveDistance, OnMoveOutCompleted);
     }
     private void OnMoveOutCompleted()
@@ -51,10 +59,16 @@ public class CubeMover : MonoBehaviour
     {
         Move(StartPosition);
     }
+    private IEnumerator DelayTouch(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        isMoving = false;
+    }
     private void ShakeCube()
     {
         Vector3 originalScale = transform.localScale;
         boxCollider.enabled = false;
+
         tween?.Kill();
         tween = DOTween.Sequence()
             .Append(transform.DOScale(originalScale * 1.12f, 0.08f).SetEase(Ease.OutQuad))
