@@ -1,20 +1,17 @@
-using System;
-using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
-using System.Collections;
 using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 public class LevelLoader : MonoBehaviour
 {
     [SerializeField] private Cube cubePrefab;
     [SerializeField] private GameObject spawnRoot;
-    // [SerializeField] private int levelEachMap = 10;
+    private List<Cube> cubeList;
     private void Start()
     {
-        // LoadLevelFromTextAsset(levelFile);
-        // SpawnLevel();
+        cubeList = new();
     }
     [ContextMenu("Test Load Level From TA")]
     public LevelData LoadLevelFromTextAsset(TextAsset levelFile)
@@ -32,7 +29,6 @@ public class LevelLoader : MonoBehaviour
         Debug.Log("Current level: " + fileName);
         return fileName;
     }
-    [ContextMenu("Spawn Level From Json In Inspector")]
     public void SpawnLevel(TextAsset levelDataFile)
     {
         LevelData levelData = LoadLevelFromTextAsset(levelDataFile);
@@ -60,12 +56,21 @@ public class LevelLoader : MonoBehaviour
         {
             Cube newCube = Instantiate(cubePrefab, spawnRoot.transform);
             newCube.InitByCubeData(cube);
-          }
+            cubeList.Add(newCube);
+        }
         Addressables.Release(handle);
     }
     public async UniTask SpawnCurrentLevelFromUserData(TextAsset userData)
     {
         string jsonFilePath = GetCurrentLevelNameFromData(userData);
         await SpawnLevelFromJson(jsonFilePath);
+    }
+    public void DestroyLevel()
+    {
+        cubeList.Clear();
+    }
+    public int GetCubeCount()
+    {
+        return cubeList.Count;
     }
 }

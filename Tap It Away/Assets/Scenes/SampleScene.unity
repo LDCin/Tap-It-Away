@@ -491,7 +491,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &548864354
+--- !u!1 &641649759
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -499,44 +499,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 548864355}
-  - component: {fileID: 548864356}
+  - component: {fileID: 641649761}
+  - component: {fileID: 641649760}
   m_Layer: 0
-  m_Name: LevelLoader
+  m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &548864355
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 548864354}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &548864356
+--- !u!114 &641649760
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 548864354}
+  m_GameObject: {fileID: 641649759}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a157eccd66845e4688b7c42fc5480d5, type: 3}
+  m_Script: {fileID: 11500000, guid: b80e238eaaeccf44697555901a97a4d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
-  cubePrefab: {fileID: 4705002411133471821, guid: 46dc9a54b5aaba04fa0390ff56ea3e1b, type: 3}
-  spawnRoot: {fileID: 934567464}
+  m_EditorClassIdentifier: Assembly-CSharp::LevelManager
+  levelLoader: {fileID: 1159957631}
+  userData: {fileID: 4900000, guid: 9ba3953e483d72e42a0eb781513ac90a, type: 3}
+  levelDataFile: {fileID: 4900000, guid: 7f10f7992b43cce4f8354fe5642e8649, type: 3}
+  useLevelFileToTest: 0
+--- !u!4 &641649761
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641649759}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1159957630}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &678289907
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,10 +636,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 836378ff65d87ff43b09f50fbf97fe28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  levelLoader: {fileID: 548864356}
-  userData: {fileID: 4900000, guid: 9ba3953e483d72e42a0eb781513ac90a, type: 3}
-  levelDataFile: {fileID: 0}
-  useLevelFileToTest: 0
+  levelManager: {fileID: 641649760}
+  inputManager: {fileID: 678289909}
+  startGameStateType: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,6 +719,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1159957629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1159957630}
+  - component: {fileID: 1159957631}
+  m_Layer: 0
+  m_Name: LevelLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1159957630
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159957629}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 641649761}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1159957631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159957629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a157eccd66845e4688b7c42fc5480d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
+  cubePrefab: {fileID: 4705002411133471821, guid: 46dc9a54b5aaba04fa0390ff56ea3e1b, type: 3}
+  spawnRoot: {fileID: 934567464}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -726,6 +774,6 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 678289908}
-  - {fileID: 548864355}
   - {fileID: 810762648}
+  - {fileID: 641649761}
   - {fileID: 934567465}

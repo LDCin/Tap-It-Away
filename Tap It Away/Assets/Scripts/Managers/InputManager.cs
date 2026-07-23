@@ -8,12 +8,17 @@ public class InputManager : MonoBehaviour
     [SerializeField] private float rotateSensitivity = 1f;
     [SerializeField] private Transform puzzleRoot;
     [SerializeField] LayerMask cubeLayer;
+    private bool isLocked = false;
     private Vector2 touchBeganPosition;
     private bool isDragging = false;
     private CubeMover selectedCube;
 
     private void Update()
     {
+        if (isLocked)
+        {
+            return;
+        }
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -95,5 +100,13 @@ public class InputManager : MonoBehaviour
 
         puzzleRoot.Rotate(Vector3.up, horizontalAngle, Space.World);
         puzzleRoot.Rotate(mainCamera.transform.right, verticalAngle, Space.World);
+    }
+    public void LockInput()
+    {
+        isLocked = true;
+    }
+    public void UnlockInput()
+    {
+        isLocked = false;
     }
 }

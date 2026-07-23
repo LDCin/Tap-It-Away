@@ -2,11 +2,11 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class CubeMover : MonoBehaviour
 {
-    public static event Action<Collision> OnCubeBlock;
+    public static event Action OnCubeBlock;
+    public static event Action OnCubeRemoved;
     [SerializeField] private float moveSpeed = 1;
     [SerializeField] private float moveDistance = 50;
     [SerializeField] private float collisionSkin = 0.02f;
@@ -53,6 +53,7 @@ public class CubeMover : MonoBehaviour
     }
     private void OnMoveOutCompleted()
     {
+        OnCubeRemoved?.Invoke();
         Destroy(gameObject);
     }
     private void ReturnToStartPosition()
@@ -80,9 +81,30 @@ public class CubeMover : MonoBehaviour
                 boxCollider.enabled = true;
             });
     }
-    private void OnCollisionEnter(Collision collision)
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     if (!collision.gameObject.CompareTag(GameConfig.CUBE_TAG))
+    //     {
+    //         return;
+    //     }
+
+    //     if (!isMoving)
+    //     {
+    //         ShakeCube();
+    //         return;
+    //     }
+
+    //     if (!isBlocked)
+    //     {
+    //         isBlocked = true;
+    //         OnCubeBlock?.Invoke(collision);
+    //     }
+    //     tween?.Kill();
+    //     ReturnToStartPosition();
+    // }
+    private void OnTriggerEnter(Collider other)
     {
-        if (!collision.gameObject.CompareTag(GameConfig.CUBE_TAG))
+        if (!other.gameObject.CompareTag(GameConfig.CUBE_TAG))
         {
             return;
         }
@@ -96,9 +118,9 @@ public class CubeMover : MonoBehaviour
         if (!isBlocked)
         {
             isBlocked = true;
-            OnCubeBlock?.Invoke(collision);
+            OnCubeBlock?.Invoke();
         }
-        tween?.Kill();
+        // tween?.Kill();
         ReturnToStartPosition();
     }
 }
