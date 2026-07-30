@@ -1,21 +1,23 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
     public static event Action<int> OnCubeCountChanged;
     public static  event Action<int> OnHeartCountChanged;
     public static  event Action OnLevelCompleted;
     public static  event Action OnLevelFailed;
     [SerializeField] private LevelLoader levelLoader;
-    [SerializeField] private TextAsset userData;
 #if UNITY_EDITOR
     [SerializeField] private TextAsset levelDataFile;
 #endif
     [SerializeField] private bool useLevelFileToTest = false;
     [SerializeField] private readonly int maxHeart = 3;
-    public LevelState CurrentState { get; private set; }
+    public LevelState CurrentLevelState { get; private set; }
+    private List<CubeMover> levelCubeList;
+    public List<CubeMover> LevelCubeList => levelCubeList;
     private void OnEnable()
     {
         CubeMover.OnCubeRemoved += HandleCubeRemoved;
@@ -37,19 +39,26 @@ public class LevelManager : MonoBehaviour
                 return;
             }
 #endif
-            await levelLoader.SpawnCurrentLevelFromUserData(userData);
-            CurrentState = new LevelState(levelLoader.GetCubeCount(), maxHeart);
-            Debug.Log("Remaining Heart: " + CurrentState.RemainingHeartCount);
-            Debug.Log("Remaining Cube: " + CurrentState.RemainingCubeCount);
+            string levelName = DataManager.Instance.GetCurrentLevelName();
+            if (string.IsNullOrEmpty(levelName))
+            {
+                return;
+            }
+
+            await levelLoader.SpawnLevelFromJson(levelName);
+            CurrentLevelState = new LevelState(levelLoader.GetCubeCount(), maxHeart);
+            levelCubeList = new(levelLoader.CubeList);
+            Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
+            Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
         }
     }
     public void HandleCubeRemoved()
     {
-        CurrentState.RemoveCube();
-        Debug.Log("Remaining Cube: " + CurrentState.RemainingCubeCount);
-        OnCubeCountChanged?.Invoke(CurrentState.RemainingCubeCount);
+        CurrentLevelState.RemoveCube();
+        Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
+        OnCubeCountChanged?.Invoke(CurrentLevelState.RemainingCubeCount);
 
-        if (CurrentState.IsCompleted)
+        if (CurrentLevelState.IsCompleted)
         {
             Debug.Log("Win game");
             OnLevelCompleted?.Invoke();
@@ -58,11 +67,11 @@ public class LevelManager : MonoBehaviour
 
     public void HandleCubeBlocked()
     {
-        CurrentState.LoseHeart();
-        Debug.Log("Remaining Heart: " + CurrentState.RemainingHeartCount);
-        OnHeartCountChanged?.Invoke(CurrentState.RemainingHeartCount);
+        CurrentLevelState.LoseHeart();
+        Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
+        OnHeartCountChanged?.Invoke(CurrentLevelState.RemainingHeartCount);
 
-        if (CurrentState.IsFailed)
+        if (CurrentLevelState.IsFailed)
         {
             Debug.Log("Lose game");
             OnLevelFailed?.Invoke();

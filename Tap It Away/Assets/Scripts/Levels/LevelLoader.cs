@@ -8,7 +8,8 @@ public class LevelLoader : MonoBehaviour
 {
     [SerializeField] private Cube cubePrefab;
     [SerializeField] private GameObject spawnRoot;
-    private List<Cube> cubeList;
+    private List<CubeMover> cubeList;
+    public List<CubeMover> CubeList => cubeList;
     private void Start()
     {
         cubeList = new();
@@ -19,15 +20,6 @@ public class LevelLoader : MonoBehaviour
         LevelData levelData = JsonConvert.DeserializeObject<LevelData>(levelFile.text);
         // Debug.Log(levelData.board.sizeX + " " + levelData.board.sizeY + " " + levelData.board.sizeZ);
         return levelData;
-    }
-    public string GetCurrentLevelNameFromData(TextAsset userDataFile)
-    {
-        UserData userData = JsonConvert.DeserializeObject<UserData>(userDataFile.text);
-        int mapNumber = userData.map;
-        int levelNumber = userData.level;
-        string fileName = $"level_{mapNumber}-{levelNumber}";
-        Debug.Log("Current level: " + fileName);
-        return fileName;
     }
     public void SpawnLevel(TextAsset levelDataFile)
     {
@@ -56,14 +48,9 @@ public class LevelLoader : MonoBehaviour
         {
             Cube newCube = Instantiate(cubePrefab, spawnRoot.transform);
             newCube.InitByCubeData(cube);
-            cubeList.Add(newCube);
+            cubeList.Add(newCube.gameObject.GetComponent<CubeMover>());
         }
         Addressables.Release(handle);
-    }
-    public async UniTask SpawnCurrentLevelFromUserData(TextAsset userData)
-    {
-        string jsonFilePath = GetCurrentLevelNameFromData(userData);
-        await SpawnLevelFromJson(jsonFilePath);
     }
     public void DestroyLevel()
     {

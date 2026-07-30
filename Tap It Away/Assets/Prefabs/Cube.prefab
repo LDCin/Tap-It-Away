@@ -67,9 +67,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CubeMover
   moveSpeed: 10
   moveDistance: 50
-  collisionSkin: 0.02
   isBlocked: 0
+  scaleRate: 1.05
+  scaleTime: 0.4
   delayActionTime: 0.2
+  castConfig:
+    castDistance: 100
+    castLayer:
+      serializedVersion: 2
+      m_Bits: 64
+  isGhost: 0
 --- !u!33 &1843407296425381156
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -103,7 +110,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 507bd21827138ef4fb32fe77a17250d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -185,7 +192,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7455336765971869971}
   - component: {fileID: 844069789815068174}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ArrrowQuadGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

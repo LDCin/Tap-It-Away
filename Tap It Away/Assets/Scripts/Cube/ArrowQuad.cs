@@ -8,6 +8,7 @@ public class ArrowQuad : MonoBehaviour
     private MaterialPropertyBlock arrowQuadMaterialPropertyBlock;
     [SerializeField] private Texture2D arrow;
     [SerializeField] private Texture2D circle;
+    [SerializeField] private float ghostOpacity = 0.8f;
     // [SerializeField] private bool isArrow = true;
     private void Awake()
     {
@@ -32,5 +33,27 @@ public class ArrowQuad : MonoBehaviour
         meshRenderer.GetPropertyBlock(arrowQuadMaterialPropertyBlock);
         arrowQuadMaterialPropertyBlock.SetTexture(BaseMapID, texture);
         meshRenderer.SetPropertyBlock(arrowQuadMaterialPropertyBlock);
+    }
+    public void SetOpacity(float opacity)
+    {
+        meshRenderer.GetPropertyBlock(arrowQuadMaterialPropertyBlock);
+
+        Color color = Color.white;
+        if (arrowQuadMaterialPropertyBlock.HasColor(BaseColorID))
+        {
+            color = arrowQuadMaterialPropertyBlock.GetColor(BaseColorID);
+        }
+        else
+        {
+            color = meshRenderer.sharedMaterial.GetColor(BaseColorID);
+        }
+
+        color.a = opacity;
+        arrowQuadMaterialPropertyBlock.SetColor(BaseColorID, color);
+        meshRenderer.SetPropertyBlock(arrowQuadMaterialPropertyBlock);
+    }
+    public void SetGhostOpacity()
+    {
+        SetOpacity(ghostOpacity);
     }
 }

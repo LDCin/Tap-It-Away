@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using System.Collections;
+// using NUnit.Framework;
 
 public class CubeMover : MonoBehaviour
 {
@@ -9,20 +10,48 @@ public class CubeMover : MonoBehaviour
     public static event Action OnCubeRemoved;
     [SerializeField] private float moveSpeed = 1;
     [SerializeField] private float moveDistance = 50;
-    [SerializeField] private float collisionSkin = 0.02f;
+    // [SerializeField] private float collisionSkin = 0.02f;
     [SerializeField] private bool isBlocked = false;
+    [SerializeField] private float scaleRate = 1.5f;
+    [SerializeField] private float scaleTime = 0.1f;
     [SerializeField] private float delayActionTime = 1f;
+    [SerializeField] private CastConfig castConfig;
     public CubeDirection CubeDirection { get; set; }
     public Vector3 StartPosition { get; set; }
-    public bool IsMoving => isMoving;
     private bool isMoving = false;
+    private bool isShaking = false;
+    [SerializeField] private bool isGhost = false;
     private Tween tween;
     private BoxCollider boxCollider;
     private Rigidbody rb;
+    private Vector3 originalScale;
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
+        originalScale = transform.localScale;
+    }
+    public void DisableCollider()
+    {
+        boxCollider.enabled = false;
+    }
+    public void EnableCollider()
+    {
+        boxCollider.enabled = true;
+    }
+    public void SetGhost(bool ghost)
+    {
+        isGhost = ghost;
+    }
+    public bool CanMove()
+    {
+        Vector3 direction = CubeDirectionHelper.GetWorldDirection(CubeDirection, transform);
+        RaycastHit[] hits = CastHelper.ShootBoxCast(boxCollider, direction, castConfig);
+        if (hits.Length > 0)
+        {
+            return false;
+        }
+        return true;
     }
     private void Move(Vector3 position, Action onMoveComplete = null)
     {
@@ -38,6 +67,8 @@ public class CubeMover : MonoBehaviour
         {
             tween = null;
             StartCoroutine(DelayTouch(delayActionTime));
+            EnableCollider();
+            SetGhost(false);
             onMoveComplete?.Invoke();
         });
     }
@@ -65,46 +96,41 @@ public class CubeMover : MonoBehaviour
         yield return new WaitForSeconds(delayTime);
         isMoving = false;
     }
-    private void ShakeCube()
+    public void ShakeCube(bool loop = false)
     {
-        Vector3 originalScale = transform.localScale;
-        boxCollider.enabled = false;
+        // boxCollider.enabled = false;
 
         tween?.Kill();
-        tween = DOTween.Sequence()
-            .Append(transform.DOScale(originalScale * 1.12f, 0.08f).SetEase(Ease.OutQuad))
-            .Append(transform.DOScale(originalScale, 0.12f).SetEase(Ease.OutBack))
+        transform.localScale = originalScale;
+
+        isShaking = true;
+        Sequence shakeSequence = DOTween.Sequence()
+            .Append(transform.DOScale(originalScale * scaleRate, scaleTime).SetEase(Ease.OutQuad))
+            .Append(transform.DOScale(originalScale, scaleTime).SetEase(Ease.OutBack));
+
+        if (loop)
+        {
+            shakeSequence.SetLoops(-1, LoopType.Restart);
+        }
+
+        tween = shakeSequence
             .OnComplete(() =>
             {
-                // transform.localScale = originalScale;
+                transform.localScale = originalScale;
                 tween = null;
-                boxCollider.enabled = true;
+                // boxCollider.enabled = true;
+                isShaking = false;
+            })
+            .OnKill(() =>
+            {
+                transform.localScale = originalScale;
+                // boxCollider.enabled = true;
+                isShaking = false;
             });
     }
-    // private void OnCollisionEnter(Collision collision)
-    // {
-    //     if (!collision.gameObject.CompareTag(GameConfig.CUBE_TAG))
-    //     {
-    //         return;
-    //     }
-
-    //     if (!isMoving)
-    //     {
-    //         ShakeCube();
-    //         return;
-    //     }
-
-    //     if (!isBlocked)
-    //     {
-    //         isBlocked = true;
-    //         OnCubeBlock?.Invoke(collision);
-    //     }
-    //     tween?.Kill();
-    //     ReturnToStartPosition();
-    // }
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.gameObject.CompareTag(GameConfig.CUBE_TAG))
+        if (isGhost || isShaking || !other.gameObject.CompareTag(GameConfig.CUBE_TAG))
         {
             return;
         }

@@ -9,6 +9,7 @@ public class Cube : MonoBehaviour
     [SerializeField] private CubeDirection cubeDirection = CubeDirection.Forward;
     [SerializeField] private ArrowQuadGenerator arrowQuadGenerator;
     [SerializeField] private CubeMover cubeMover;
+    [SerializeField] private float ghostOpacity = 0.8f;
     private MeshRenderer meshRenderer;
     private Rigidbody rb;
     private Vector3 positionInWorld;
@@ -25,6 +26,10 @@ public class Cube : MonoBehaviour
         quadList = new List<ArrowQuad>();
         cubeMaterialPropertyBlock = new();
         quadConfigList = new();
+    }
+    private void OnEnable()
+    {
+        SetOpacity(1);
     }
     public void InitBySO(CubeSO cubeData)
     {
@@ -52,6 +57,32 @@ public class Cube : MonoBehaviour
         meshRenderer.GetPropertyBlock(cubeMaterialPropertyBlock);
         cubeMaterialPropertyBlock.SetColor(BaseColorID, cubeColor);
         meshRenderer.SetPropertyBlock(cubeMaterialPropertyBlock);
+    }
+    public void SetOpacity(float opacity)
+    {
+        meshRenderer.GetPropertyBlock(cubeMaterialPropertyBlock);
+
+        Color color = Color.white;
+        if (cubeMaterialPropertyBlock.HasColor(BaseColorID))
+        {
+            color = cubeMaterialPropertyBlock.GetColor(BaseColorID);
+        }
+        else
+        {
+            color = meshRenderer.sharedMaterial.GetColor(BaseColorID);
+        }
+
+        color.a = opacity;
+        cubeMaterialPropertyBlock.SetColor(BaseColorID, color);
+        meshRenderer.SetPropertyBlock(cubeMaterialPropertyBlock);
+    }
+    public void SetCubeGhostVisual()
+    {
+        SetOpacity(ghostOpacity);
+        foreach (var quad in quadList)
+        {
+            quad.SetGhostOpacity();
+        }
     }
     private Color GetColorByCode(string code)
     {

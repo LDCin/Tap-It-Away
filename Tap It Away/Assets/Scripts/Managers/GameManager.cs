@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    [SerializeField] private LevelManager levelManager;
+    // [SerializeField] private LevelManager levelManager;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private GameStateType startGameStateType = GameStateType.Menu;
     private StateMachine stateMachine;

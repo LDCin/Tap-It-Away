@@ -1,17 +1,19 @@
+using System;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
+    public static event Action<CubeMover> OnTapCube;
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private float raycastDistance = 100f;
+    [SerializeField] private CastConfig castConfig;
     [SerializeField] private float dragThreshHold = 20f;
     [SerializeField] private float rotateSensitivity = 1f;
     [SerializeField] private Transform puzzleRoot;
-    [SerializeField] LayerMask cubeLayer;
     private bool isLocked = false;
     private Vector2 touchBeganPosition;
     private bool isDragging = false;
     private CubeMover selectedCube;
+    public CubeMover SelectedCube => selectedCube;
 
     private void Update()
     {
@@ -53,12 +55,21 @@ public class InputManager : MonoBehaviour
     }
     private CubeMover GetFirstCubeOnRaycast(Vector2 screenPosition)
     {
-        Ray ray = mainCamera.ScreenPointToRay(screenPosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, raycastDistance, cubeLayer))
+        if (castConfig == null)
         {
-            CubeMover other = hit.collider.GetComponent<CubeMover>();
-            return other;
+            Debug.LogError("CastConfig is missing.");
+            return null;
         }
+
+        if (CastHelper.ShootRaycast(
+            mainCamera,
+            screenPosition,
+            castConfig,
+            out CubeMover cubeMover))
+        {
+            return cubeMover;
+        }
+
         return null;
     }
     private void HandleTouchBegan(Touch touch)
@@ -84,6 +95,7 @@ public class InputManager : MonoBehaviour
     {
         if (!isDragging && selectedCube != null)
         {
+            OnTapCube?.Invoke(selectedCube);
             selectedCube.MoveOut();
         }
         ResetTouch();
