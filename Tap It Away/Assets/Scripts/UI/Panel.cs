@@ -1,38 +1,30 @@
-using System;
-using DG.Tweening;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class Panel : MonoBehaviour
 {
     [SerializeField] private bool _destroyOnClose = false;
-    [SerializeField] private bool hasEffectOnOpen = false;
-    [SerializeField] private bool hasEffectOnClose = false;
     [SerializeField] private UILayer uiLayer = UILayer.Overlay;
+    private Coroutine _closeCoroutine;
 
     public UILayer UILayer => uiLayer;
     public void Open()
     {
-        PlayOpenEffect();
-    }
-
-    public abstract void UpdateVisual();
-
-    public void PlayOpenEffect()
-    {
-        gameObject.SetActive(true);
-        if (hasEffectOnOpen)
+        if (_closeCoroutine != null)
         {
-
+            StopCoroutine(_closeCoroutine);
+            _closeCoroutine = null;
         }
+
+        gameObject.SetActive(true);
         UpdateVisual();
     }
-    public void PlayCloseEffect()
+    public virtual void UpdateVisual()
     {
-        if (hasEffectOnClose)
-        {
-
-        }
+        Debug.Log(gameObject.name + " Update Visual");
+    }
+    public void Close()
+    {
         if (_destroyOnClose)
         {
             UIManager.Instance?.UnregisterPanel(name);
@@ -40,12 +32,39 @@ public abstract class Panel : MonoBehaviour
         }
         else
         {
+            UIEffect effect = GetComponent<UIEffect>();
+
+            if (effect != null && effect.UseCloseEffect)
+            {
+                if (_closeCoroutine != null)
+                {
+                    StopCoroutine(_closeCoroutine);
+                }
+
+                _closeCoroutine = StartCoroutine(CloseAfterEffect(effect));
+                return;
+            }
+
             gameObject.SetActive(false);
         }
     }
 
-    public void Close()
+    private IEnumerator CloseAfterEffect(UIEffect effect)
     {
-        PlayCloseEffect();
+        if (effect.DeltaTimeIndependent)
+        {
+            yield return new WaitForSecondsRealtime(effect.HidePanelDelayTime);
+            effect.Close();
+            yield return new WaitForSecondsRealtime(effect.ClosePanelDuration);
+        }
+        else
+        {
+            yield return new WaitForSeconds(effect.HidePanelDelayTime);
+            effect.Close();
+            yield return new WaitForSeconds(effect.ClosePanelDuration);
+        }
+
+        _closeCoroutine = null;
+        gameObject.SetActive(false);
     }
 }

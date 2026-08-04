@@ -20,13 +20,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4289dd66eeab41b4dacf2e2377937de1
-    m_Address: Panel - Menu
+  - m_GUID: 7491aac36289b324685ff0ad73949e8a
+    m_Address: Panel - Gameplay
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7491aac36289b324685ff0ad73949e8a
-    m_Address: Panel - Gameplay
+  - m_GUID: 9c6edea57f70c6f4b96dbb9dab049c7b
+    m_Address: Panel - Menu
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

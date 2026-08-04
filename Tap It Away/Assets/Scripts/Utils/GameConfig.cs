@@ -8,4 +8,5 @@ public class GameConfig{
     public static string SETTING_IN_GAME_PANEL = "Panel - Setting In Game";
     public static string SETTING_IN_MENU_PANEL = "Panel - Setting In Menu";
     public static string LOADING_PANEL = "Panel - Loading";
+    public static string NO_ADS_PANEL = "Panel - No Ads";
 }

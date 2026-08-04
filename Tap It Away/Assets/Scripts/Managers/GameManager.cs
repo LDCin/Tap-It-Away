@@ -10,10 +10,16 @@ public class GameManager : MonoBehaviour
     private StateMachine stateMachine;
     private void OnEnable()
     {
-        MenuPanel.OnPlayGame += HandlePlayGame;
+        HomeTab.OnPlayGame += HandlePlayGame;
         LevelManager.OnLevelCompleted += () => ChangeGameState(GameStateType.Complete);
         LevelManager.OnLevelFailed += () => ChangeGameState(GameStateType.Fail);
     }
+
+    private void OnDisable()
+    {
+        HomeTab.OnPlayGame -= HandlePlayGame;
+    }
+
     private void Start()
     {
         InitStateMachine();
