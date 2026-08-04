@@ -6,8 +6,8 @@ public class InputManager : Singleton<InputManager>
     public static event Action<CubeMover> OnTapCube;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private CastConfig castConfig;
-    [SerializeField] private float dragThreshHold = 20f;
-    [SerializeField] private float rotateSensitivity = 1f;
+    [SerializeField, Range(0.1f, 30f)] private float dragThreshHold = 20f;
+    [SerializeField, Range(0.1f, 2f)] private float rotateSensitivity = 1f;
     [SerializeField] private Transform puzzleRoot;
     private bool isLocked = false;
     private Vector2 touchBeganPosition;

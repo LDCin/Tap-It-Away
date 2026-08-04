@@ -39,21 +39,8 @@ public class DataManager : Singleton<DataManager>
 
         int mapNumber = CurrentUserData.map;
         int levelNumber = CurrentUserData.level;
-        string fileName = $"level_{mapNumber}-{levelNumber}";
+        string fileName = $"Level {mapNumber}-{levelNumber}";
         Debug.Log("Current level: " + fileName);
         return fileName;
-    }
-    public async UniTask<BoosterSO> LoadBoosterSO(BoosterType boosterType)
-    {
-        var handle = Addressables.LoadAssetAsync<BoosterSO>(boosterType.ToString());
-        await handle;
-        if (handle.Status != AsyncOperationStatus.Succeeded)
-        {
-            Addressables.Release(handle);
-            Debug.Log("Not Found Hint SO");
-            return null;
-        }
-        BoosterSO boosterSO = handle.Result;
-        return boosterSO;
     }
 }

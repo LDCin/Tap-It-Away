@@ -31,7 +31,7 @@ public class LevelLoader : MonoBehaviour
             newCube.transform.localPosition = cube.position;
         }
     }
-    public async UniTask SpawnLevelFromJson(string jsonFileName)
+    public async UniTask SpawnLevelFromJsonAsync(string jsonFileName)
     {
         AsyncOperationHandle<TextAsset> handle = Addressables.LoadAssetAsync<TextAsset>(jsonFileName);
         await handle;

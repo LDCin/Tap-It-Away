@@ -1,18 +1,18 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class HintBooster : BoosterBase
 {
     private List<CubeMover> movableCubeList;
-    [ContextMenu("Test Hint Booster")]
-    public void Test()
+    public HintBooster(BoosterSO boosterSO) : base(boosterSO)
     {
-        Active();
     }
-    public override void Active()
+    public override UniTask Active()
     {
         List<CubeMover> cubeMoverList = new(LevelManager.Instance.LevelCubeList);
         movableCubeList = new();
+
         foreach (var cube in cubeMoverList)
         {
             if (cube.CanMove())
@@ -20,7 +20,10 @@ public class HintBooster : BoosterBase
                 movableCubeList.Add(cube);
             }
         }
+
         PlayHintEffect();
+
+        return UniTask.CompletedTask;
     }
     public override void Deactive()
     {
@@ -34,5 +37,9 @@ public class HintBooster : BoosterBase
             // Destroy(cube.gameObject);
             cube.ShakeCube(true);
         }
+    }
+    public void Dispose()
+    {
+        
     }
 }

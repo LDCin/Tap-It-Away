@@ -1,6 +1,9 @@
 public enum GameStateType
 {
     Play,
-    Finish,
-    Menu
+    Fail,
+    Complete,
+    Menu,
+    SettingInGame,
+    Loading
 }

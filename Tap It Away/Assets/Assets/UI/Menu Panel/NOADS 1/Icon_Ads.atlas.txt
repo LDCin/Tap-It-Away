@@ -1,0 +1,55 @@
+
+Icon_Ads.png
+size: 780,264
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Ellipse 529
+  rotate: false
+  xy: 2, 2
+  size: 260, 260
+  orig: 262, 262
+  offset: 1, 1
+  index: -1
+icon_RemoveAds_A
+  rotate: true
+  xy: 686, 185
+  size: 77, 88
+  orig: 83, 93
+  offset: 3, 2
+  index: -1
+icon_RemoveAds_D
+  rotate: true
+  xy: 686, 112
+  size: 71, 89
+  orig: 75, 93
+  offset: 2, 2
+  index: -1
+icon_RemoveAds_Red
+  rotate: false
+  xy: 486, 54
+  size: 198, 208
+  orig: 200, 210
+  offset: 1, 1
+  index: -1
+icon_RemoveAds_Red1
+  rotate: true
+  xy: 486, 7
+  size: 45, 154
+  orig: 45, 154
+  offset: 0, 0
+  index: -1
+icon_RemoveAds_S
+  rotate: true
+  xy: 686, 47
+  size: 63, 90
+  orig: 66, 93
+  offset: 2, 1
+  index: -1
+icon_RemoveAds_White
+  rotate: false
+  xy: 264, 32
+  size: 220, 230
+  orig: 226, 238
+  offset: 3, 4
+  index: -1

@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class GhostCubeBooster : BoosterBase
 {
-    private int count = 3;
-    [ContextMenu("Test Ghost Booster")]
-    public void Test()
+    private int currentCount = 0;
+    public GhostCubeBooster(BoosterSO boosterSO) : base(boosterSO)
     {
-        Active();
+        CubeMover.OnCubeRemoved += Handle;
     }
-    public override void Active()
+    public override async UniTask Active()
     {
+        currentCount = activeCount;
         List<CubeMover> cubeMoverList = new(LevelManager.Instance.LevelCubeList);
         foreach (var cubeMover in cubeMoverList)
         {
@@ -21,9 +22,21 @@ public class GhostCubeBooster : BoosterBase
             cube.SetCubeGhostVisual();
             cubeMover.SetGhost(true);
         }
+        await UniTask.WaitUntil(() => currentCount <= 0);
+    }
+    public void Handle()
+    {
+        if (currentCount > 0)
+        {
+            currentCount--;
+        }
     }
     public override void Deactive()
     {
-        throw new System.NotImplementedException();
+
+    }
+    public void Dispose()
+    {
+        CubeMover.OnCubeRemoved -= Handle;
     }
 }

@@ -33,7 +33,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7455336765971869971}
   m_Father: {fileID: 0}
@@ -53,6 +53,7 @@ MonoBehaviour:
   cubeDirection: 4
   arrowQuadGenerator: {fileID: 844069789815068174}
   cubeMover: {fileID: 7173242933969747984}
+  ghostOpacity: 0.8
 --- !u!114 &7173242933969747984
 MonoBehaviour:
   m_ObjectHideFlags: 0
