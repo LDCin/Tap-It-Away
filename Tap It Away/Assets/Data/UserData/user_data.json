@@ -1,12 +1,10 @@
 {
   "map": 1,
-  "level": 3,
-  "coin": 100,
-  "userBoosterDataList": [
-    {
-      "boosterType": "Hint",
-      "isUnlocked": true,
-      "count": 1
-    }
-  ]
+  "level": 1,
+  "coins": 0,
+  "themeType": "Light",
+  "bgmEnabled": true,
+  "sfxEnabled": true,
+  "hapticEnabled": true,
+  "userBoosterDataList": []
 }

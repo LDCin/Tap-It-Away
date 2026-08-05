@@ -8,6 +8,8 @@ public class CubeMover : MonoBehaviour
 {
     public static event Action OnCubeBlock;
     public static event Action OnCubeRemoved;
+    public static event Action<CubeMover> OnCubeRemovedWithReference;
+    public static event Action<CubeMover> OnCubeReturnedWithReference;
     [SerializeField] private float moveSpeed = 1;
     [SerializeField] private float moveDistance = 50;
     // [SerializeField] private float collisionSkin = 0.02f;
@@ -25,6 +27,12 @@ public class CubeMover : MonoBehaviour
     private BoxCollider boxCollider;
     private Rigidbody rb;
     private Vector3 originalScale;
+    private bool isRemovedFromLevelList = false;
+    private bool isRemovedFromLevelState = false;
+    private Transform originalParent;
+    private Vector3 originalLocalPosition;
+    private Quaternion originalLocalRotation;
+    private Vector3 originalLocalScale;
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
@@ -53,9 +61,8 @@ public class CubeMover : MonoBehaviour
         }
         return true;
     }
-    private void Move(Vector3 position, Action onMoveComplete = null)
+    private void Move(Vector3 position, Action onMoveComplete = null, bool enableColliderOnComplete = true)
     {
-        isBlocked = false;
         isMoving = true;
 
         tween?.Kill();
@@ -67,7 +74,10 @@ public class CubeMover : MonoBehaviour
         {
             tween = null;
             StartCoroutine(DelayTouch(delayActionTime));
-            EnableCollider();
+            if (enableColliderOnComplete)
+            {
+                EnableCollider();
+            }
             SetGhost(false);
             onMoveComplete?.Invoke();
         });
@@ -78,18 +88,91 @@ public class CubeMover : MonoBehaviour
         {
             return;
         }
+
+        bool canMoveOut = isGhost || CanMove();
+        if (canMoveOut)
+        {
+            RemoveFromLevelState();
+            DisableCollider();
+        }
+
+        CacheOriginalParent();
+        RemoveFromLevelList();
+        DetachFromPuzzleRoot();
+
         StartPosition = transform.position;
         Vector3 directionVector = CubeDirectionHelper.GetWorldDirection(CubeDirection, transform);
-        Move(transform.position + directionVector * moveDistance, OnMoveOutCompleted);
+        Move(transform.position + directionVector * moveDistance, OnMoveOutCompleted, !canMoveOut);
     }
     private void OnMoveOutCompleted()
     {
-        OnCubeRemoved?.Invoke();
+        RemoveFromLevelList();
+        RemoveFromLevelState();
         Destroy(gameObject);
+    }
+
+    private void RemoveFromLevelState()
+    {
+        if (isRemovedFromLevelState)
+        {
+            return;
+        }
+
+        isRemovedFromLevelState = true;
+        OnCubeRemoved?.Invoke();
+    }
+
+    private void RemoveFromLevelList()
+    {
+        if (isRemovedFromLevelList)
+        {
+            return;
+        }
+
+        isRemovedFromLevelList = true;
+        OnCubeRemovedWithReference?.Invoke(this);
+    }
+    private void DetachFromPuzzleRoot()
+    {
+        if (transform.parent == null)
+        {
+            return;
+        }
+
+        transform.SetParent(null, true);
+    }
+    private void CacheOriginalParent()
+    {
+        originalParent = transform.parent;
+        originalLocalPosition = transform.localPosition;
+        originalLocalRotation = transform.localRotation;
+        originalLocalScale = transform.localScale;
     }
     private void ReturnToStartPosition()
     {
-        Move(StartPosition);
+        Vector3 returnPosition = originalParent != null
+            ? originalParent.TransformPoint(originalLocalPosition)
+            : StartPosition;
+
+        Move(returnPosition, OnReturnToStartPositionCompleted);
+    }
+    private void OnReturnToStartPositionCompleted()
+    {
+        ReattachToPuzzleRoot();
+        isRemovedFromLevelList = false;
+        OnCubeReturnedWithReference?.Invoke(this);
+    }
+    private void ReattachToPuzzleRoot()
+    {
+        if (originalParent == null)
+        {
+            return;
+        }
+
+        transform.SetParent(originalParent, true);
+        transform.localPosition = originalLocalPosition;
+        transform.localRotation = originalLocalRotation;
+        transform.localScale = originalLocalScale;
     }
     private IEnumerator DelayTouch(float delayTime)
     {

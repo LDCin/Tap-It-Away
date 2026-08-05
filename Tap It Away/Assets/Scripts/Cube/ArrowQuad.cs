@@ -56,4 +56,8 @@ public class ArrowQuad : MonoBehaviour
     {
         SetOpacity(ghostOpacity);
     }
+    public void SetNormalOpacity()
+    {
+        SetOpacity(1f);
+    }
 }

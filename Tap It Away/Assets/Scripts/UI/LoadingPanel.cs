@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class LoadingPanel : Panel
 {
+    [SerializeField] private Image backgroundImage;
     [SerializeField] private Image progress;
     [SerializeField] private float loadingDuration = 2f;
 
@@ -14,7 +15,18 @@ public class LoadingPanel : Panel
     public override void UpdateVisual()
     {
         base.UpdateVisual();
+        ApplyTheme(GameThemeController.Instance != null ? GameThemeController.Instance.CurrentTheme : null);
         StartLoading();
+    }
+
+    private void ApplyTheme(GameThemeSO theme)
+    {
+        if (theme == null || backgroundImage == null || theme.menuBackgroundSprite == null)
+        {
+            return;
+        }
+
+        backgroundImage.sprite = theme.menuBackgroundSprite;
     }
 
     private void StartLoading()

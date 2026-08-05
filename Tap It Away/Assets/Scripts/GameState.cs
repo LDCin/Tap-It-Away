@@ -24,6 +24,7 @@ public class PlayGameState : IState
 	public void Exit()
 	{
 		inputManager.LockInput();
+		UIManager.Instance.ClosePanel(GameConfig.SETTING_IN_GAME_PANEL);
 		UIManager.Instance.ClosePanel(GameConfig.GAMEPLAY_PANEL);
 	}
 }
@@ -94,6 +95,7 @@ public class MenuGameState : IState
 	public void Enter()
 	{
 		inputManager.LockInput();
+		GameThemeController.Instance?.SetBackgroundType(GameThemeBackgroundType.Menu);
 		UIManager.Instance.OpenPanel(GameConfig.MENU_PANEL, true);
 	}
 
@@ -148,6 +150,7 @@ public class LoadingGameState : IState
 	public void Enter()
 	{
 		inputManager.LockInput();
+		GameThemeController.Instance?.SetBackgroundType(GameThemeBackgroundType.Menu);
 		UIManager.Instance.OpenPanel(GameConfig.LOADING_PANEL);
 	}
 

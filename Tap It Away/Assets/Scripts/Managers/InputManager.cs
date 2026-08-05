@@ -13,7 +13,21 @@ public class InputManager : Singleton<InputManager>
     private Vector2 touchBeganPosition;
     private bool isDragging = false;
     private CubeMover selectedCube;
+    private Vector3 puzzleRootInitialLocalPosition;
+    private Quaternion puzzleRootInitialLocalRotation;
+    private Vector3 puzzleRootInitialLocalScale;
     public CubeMover SelectedCube => selectedCube;
+
+    public override void Awake()
+    {
+        base.Awake();
+        if (Instance != this)
+        {
+            return;
+        }
+
+        CachePuzzleRootTransform();
+    }
 
     private void Update()
     {
@@ -120,5 +134,30 @@ public class InputManager : Singleton<InputManager>
     public void UnlockInput()
     {
         isLocked = false;
+    }
+
+    private void CachePuzzleRootTransform()
+    {
+        if (puzzleRoot == null)
+        {
+            return;
+        }
+
+        puzzleRootInitialLocalPosition = puzzleRoot.localPosition;
+        puzzleRootInitialLocalRotation = puzzleRoot.localRotation;
+        puzzleRootInitialLocalScale = puzzleRoot.localScale;
+    }
+
+    public void ResetPuzzleRootTransform()
+    {
+        if (puzzleRoot == null)
+        {
+            return;
+        }
+
+        puzzleRoot.localPosition = puzzleRootInitialLocalPosition;
+        puzzleRoot.localRotation = puzzleRootInitialLocalRotation;
+        puzzleRoot.localScale = puzzleRootInitialLocalScale;
+        ResetTouch();
     }
 }

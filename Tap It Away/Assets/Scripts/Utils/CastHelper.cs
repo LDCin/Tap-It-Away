@@ -46,9 +46,12 @@ public static class CastHelper
             return Array.Empty<RaycastHit>();
         }
 
+        Vector3 center = boxCollider.transform.TransformPoint(boxCollider.center);
+        Vector3 halfExtents = Vector3.Scale(boxCollider.size, boxCollider.transform.lossyScale) * 0.5f * DefaultBoxCastScale;
+
         RaycastHit[] hits = Physics.BoxCastAll(
-            boxCollider.bounds.center,
-            boxCollider.bounds.extents * DefaultBoxCastScale,
+            center,
+            halfExtents,
             direction.normalized,
             boxCollider.transform.rotation,
             castConfig.castDistance,

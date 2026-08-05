@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 848a3a3d11d72b94a9b94d196eb51328, type: 3}
+  m_Name: Light Theme
+  m_EditorClassIdentifier: Assembly-CSharp::GameThemeSO
+  themeType: 0
+  menuBackgroundSprite: {fileID: 21300000, guid: 3d48c792b2b12164bbd09fc5df76fa1a, type: 3}
+  gameplayBackgroundSprite: {fileID: 21300000, guid: 8f37141fd51c66b41b317ded5fee278c, type: 3}
+  boosterButtonSprite: {fileID: 21300000, guid: 24b8d25e6afaa9e42a84e1807f22e77e, type: 3}

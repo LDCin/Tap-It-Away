@@ -18,3 +18,5 @@ MonoBehaviour:
   activeCount: 1
   deactive: 0
   price: 100
+  unlockLevel: 5
+  initialCount: 5

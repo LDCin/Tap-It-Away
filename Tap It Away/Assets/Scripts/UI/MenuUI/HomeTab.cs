@@ -55,7 +55,7 @@ public class HomeTab : Panel
             return;
         }
 
-        currentLevelNumber = (userData.map - 1) * 10 + userData.level;
+        currentLevelNumber = DataManager.Instance.GetCurrentLevelNumber();
     }
 
     private void RefreshLevelTree()
@@ -81,7 +81,7 @@ public class HomeTab : Panel
         int levelNumber = currentLevelNumber;
         bool isHardLevel = IsHardLevel(levelNumber);
 
-        playLevelText.text = $"Level + {levelNumber:00}";
+        playLevelText.text = DataManager.Instance.GetCurrentLevelDisplayName();
 
         Sprite sprite = isHardLevel && hardPlayButtonSprite != null ? hardPlayButtonSprite : normalPlayButtonSprite;
         if (sprite != null)

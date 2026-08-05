@@ -8,6 +8,10 @@ public class UserData
     public int map;
     public int level;
     public int coins;
+    public GameThemeType themeType = GameThemeType.Light;
+    public bool bgmEnabled = true;
+    public bool sfxEnabled = true;
+    public bool hapticEnabled = true;
     public List<UserBoosterData> userBoosterDataList = new();
 }
 

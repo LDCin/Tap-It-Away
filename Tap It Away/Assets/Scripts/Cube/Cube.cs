@@ -12,7 +12,6 @@ public class Cube : MonoBehaviour
     [SerializeField] private float ghostOpacity = 0.8f;
     private MeshRenderer meshRenderer;
     private Rigidbody rb;
-    private Vector3 positionInWorld;
     private readonly int BaseColorID = Shader.PropertyToID("_BaseColor");
     private MaterialPropertyBlock cubeMaterialPropertyBlock;
     private Bounds cubeBound;
@@ -43,9 +42,8 @@ public class Cube : MonoBehaviour
         cubeDirection = cubeData.moveDirection;
         FreezePosition();
         cubeMover.CubeDirection = cubeDirection;
-        positionInWorld = cubeData.position;
-        transform.position = positionInWorld;
-        cubeMover.StartPosition = positionInWorld;
+        transform.localPosition = cubeData.position;
+        cubeMover.StartPosition = transform.position;
         quadConfigList = arrowQuadGenerator.GetQuadConfigs(cubeData.moveDirection);
         Color cubeColor = GetColorByCode(cubeData.cubeColor);
         Color symbolColor = GetColorByCode(cubeData.symbolColor);
@@ -82,6 +80,14 @@ public class Cube : MonoBehaviour
         foreach (var quad in quadList)
         {
             quad.SetGhostOpacity();
+        }
+    }
+    public void SetCubeNormalVisual()
+    {
+        SetOpacity(1f);
+        foreach (var quad in quadList)
+        {
+            quad.SetNormalOpacity();
         }
     }
     private Color GetColorByCode(string code)

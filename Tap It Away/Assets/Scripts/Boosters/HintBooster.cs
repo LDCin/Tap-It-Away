@@ -15,6 +15,11 @@ public class HintBooster : BoosterBase
 
         foreach (var cube in cubeMoverList)
         {
+            if (cube == null)
+            {
+                continue;
+            }
+
             if (cube.CanMove())
             {
                 movableCubeList.Add(cube);
@@ -33,6 +38,11 @@ public class HintBooster : BoosterBase
     {
         foreach (var cube in movableCubeList)
         {
+            if (cube == null)
+            {
+                continue;
+            }
+
             Debug.Log("Shake Cube" + cube.CubeDirection);
             // Destroy(cube.gameObject);
             cube.ShakeCube(true);

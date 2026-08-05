@@ -9,10 +9,14 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private Cube cubePrefab;
     [SerializeField] private GameObject spawnRoot;
     private List<CubeMover> cubeList;
+    private Vector3 spawnRootInitialLocalPosition;
+    private Quaternion spawnRootInitialLocalRotation;
+    private Vector3 spawnRootInitialLocalScale;
     public List<CubeMover> CubeList => cubeList;
-    private void Start()
+    private void Awake()
     {
         cubeList = new();
+        CacheSpawnRootTransform();
     }
     [ContextMenu("Test Load Level From TA")]
     public LevelData LoadLevelFromTextAsset(TextAsset levelFile)
@@ -23,16 +27,20 @@ public class LevelLoader : MonoBehaviour
     }
     public void SpawnLevel(TextAsset levelDataFile)
     {
+        DestroyLevel();
+        ResetSpawnRootTransform();
         LevelData levelData = LoadLevelFromTextAsset(levelDataFile);
         foreach (var cube in levelData.cubes)
         {
             Cube newCube = Instantiate(cubePrefab, spawnRoot.transform);
             newCube.InitByCubeData(cube);
-            newCube.transform.localPosition = cube.position;
+            cubeList.Add(newCube.GetComponent<CubeMover>());
         }
     }
     public async UniTask SpawnLevelFromJsonAsync(string jsonFileName)
     {
+        DestroyLevel();
+        ResetSpawnRootTransform();
         AsyncOperationHandle<TextAsset> handle = Addressables.LoadAssetAsync<TextAsset>(jsonFileName);
         await handle;
 
@@ -54,10 +62,65 @@ public class LevelLoader : MonoBehaviour
     }
     public void DestroyLevel()
     {
+        if (cubeList == null)
+        {
+            return;
+        }
+
+        foreach (CubeMover cubeMover in cubeList)
+        {
+            if (cubeMover != null)
+            {
+                Destroy(cubeMover.gameObject);
+            }
+        }
+
         cubeList.Clear();
+        DestroyRemainingSpawnRootChildren();
+        ResetSpawnRootTransform();
     }
     public int GetCubeCount()
     {
         return cubeList.Count;
+    }
+
+    private void CacheSpawnRootTransform()
+    {
+        if (spawnRoot == null)
+        {
+            return;
+        }
+
+        Transform rootTransform = spawnRoot.transform;
+        spawnRootInitialLocalPosition = rootTransform.localPosition;
+        spawnRootInitialLocalRotation = rootTransform.localRotation;
+        spawnRootInitialLocalScale = rootTransform.localScale;
+    }
+
+    public void ResetSpawnRootTransform()
+    {
+        if (spawnRoot == null)
+        {
+            return;
+        }
+
+        Transform rootTransform = spawnRoot.transform;
+        rootTransform.localPosition = spawnRootInitialLocalPosition;
+        rootTransform.localRotation = spawnRootInitialLocalRotation;
+        rootTransform.localScale = spawnRootInitialLocalScale;
+    }
+
+    private void DestroyRemainingSpawnRootChildren()
+    {
+        if (spawnRoot == null)
+        {
+            return;
+        }
+
+        Transform rootTransform = spawnRoot.transform;
+        for (int i = rootTransform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(rootTransform.GetChild(i).gameObject);
+        }
     }
 }

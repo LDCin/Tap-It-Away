@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         HomeTab.OnPlayGame += HandlePlayGame;
+        SuccessPanel.OnNextLevel += HandleNextLevel;
+        FailPanel.OnRestart += HandleRestart;
+        SettingInGamePanel.OnBackToMenu += HandleBackToMenu;
         LevelManager.OnLevelCompleted += () => ChangeGameState(GameStateType.Complete);
         LevelManager.OnLevelFailed += () => ChangeGameState(GameStateType.Fail);
     }
@@ -18,6 +21,9 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         HomeTab.OnPlayGame -= HandlePlayGame;
+        SuccessPanel.OnNextLevel -= HandleNextLevel;
+        FailPanel.OnRestart -= HandleRestart;
+        SettingInGamePanel.OnBackToMenu -= HandleBackToMenu;
     }
 
     private void Start()
@@ -46,5 +52,20 @@ public class GameManager : MonoBehaviour
     private void HandlePlayGame()
     {
         ChangeGameState(GameStateType.Play);
+    }
+
+    private void HandleNextLevel()
+    {
+        ChangeGameState(GameStateType.Play);
+    }
+
+    private void HandleRestart()
+    {
+        ChangeGameState(GameStateType.Play);
+    }
+
+    private void HandleBackToMenu()
+    {
+        ChangeGameState(GameStateType.Menu);
     }
 }

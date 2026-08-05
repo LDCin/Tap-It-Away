@@ -124,6 +124,7 @@ public class UIManager : Singleton<UIManager>
 
     private async UniTask OpenPanelWithLoadingAsync(string panelName)
     {
+        GameThemeController.Instance?.SetBackgroundType(GameThemeBackgroundType.Menu);
         await OpenPanelInternalAsync(GameConfig.LOADING_PANEL);
 
         LoadingPanel loadingPanel = GetPanel(GameConfig.LOADING_PANEL) as LoadingPanel;
@@ -133,6 +134,7 @@ public class UIManager : Singleton<UIManager>
             await UniTask.WaitUntil(() => loadingPanel.IsDone);
         }
 
+        SetBackgroundTypeForPanel(panelName);
         await OpenPanelInternalAsync(panelName);
 
         if (loadingPanel != null)
@@ -146,17 +148,33 @@ public class UIManager : Singleton<UIManager>
     private async UniTask OpenPanelInternalAsync(string panelName)
     {
         await LoadPanel(panelName);
+        SetBackgroundTypeForPanel(panelName);
 
         Panel panel = GetPanel(panelName);
 
         if (panel != null)
         {
             panel.Open();
+            AudioManager.Instance?.RegisterButtonClickSounds(panel.transform);
         }
         else
         {
             Debug.LogError($"Panel not found: {panelName}");
         }
+    }
+
+    private void SetBackgroundTypeForPanel(string panelName)
+    {
+        if (GameThemeController.Instance == null)
+        {
+            return;
+        }
+
+        GameThemeBackgroundType backgroundType = panelName == GameConfig.GAMEPLAY_PANEL
+            ? GameThemeBackgroundType.Gameplay
+            : GameThemeBackgroundType.Menu;
+
+        GameThemeController.Instance.SetBackgroundType(backgroundType);
     }
 
     public void ClosePanel(string panelName)

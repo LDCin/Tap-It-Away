@@ -140,6 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LoadingPanel
   _destroyOnClose: 0
   uiLayer: 0
+  backgroundImage: {fileID: 1695936470097191619}
   progress: {fileID: 1030698800146498414}
   loadingDuration: 2
 --- !u!114 &4631760926708697636
@@ -220,7 +221,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9005878152251654888
 RectTransform:
   m_ObjectHideFlags: 0

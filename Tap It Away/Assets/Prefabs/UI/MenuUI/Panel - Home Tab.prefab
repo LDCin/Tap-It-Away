@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8357163141307701423
 RectTransform:
   m_ObjectHideFlags: 0
@@ -60,10 +60,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051e562490984e74ba1cc52ca6ca7c67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.ButtonEffect
-  childEffects: []
   autoPlay: 1
   deltaTimeIndependent: 0
-  useCloseEffect: 1
+  useClosePanelEffect: 1
+  showDelayTime: 0
+  hidePanelDelayTime: 0
   useScaleEffect: 1
   scaleFactor: 0.95
   scaleDuration: 0.1
@@ -320,7 +321,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692239633721269234}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -348,8 +349,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HomeTab
   _destroyOnClose: 0
-  hasEffectOnOpen: 0
-  hasEffectOnClose: 0
   uiLayer: 0
   levelTreeNodes:
   - {fileID: 2941266366795881431}
@@ -360,7 +359,6 @@ MonoBehaviour:
   - {fileID: 3167303408570432173}
   - {fileID: 3696962386201908317}
   noAdsPanel: {fileID: 0}
-  settingMenuPanel: {fileID: 6171775993903357179, guid: 22a18c5ffd7912d4187120f0e4851e71, type: 3}
   playButtonImage: {fileID: 952622210155872892}
   normalPlayButtonSprite: {fileID: 21300000, guid: 6be5bfea23f4e3a489af50bdd635e2c1, type: 3}
   hardPlayButtonSprite: {fileID: 21300000, guid: 4022a3ac2eaa7d649b82ac38b82ba7c9, type: 3}
@@ -1353,8 +1351,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -779}
-  m_SizeDelta: {x: 20, y: 2085.9}
+  m_AnchoredPosition: {x: 0, y: -1017.8849}
+  m_SizeDelta: {x: 20, y: 2563.6694}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &154396853529185272
 CanvasRenderer:
@@ -2947,10 +2945,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051e562490984e74ba1cc52ca6ca7c67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.ButtonEffect
-  childEffects: []
   autoPlay: 1
   deltaTimeIndependent: 0
-  useCloseEffect: 1
+  useClosePanelEffect: 1
+  showDelayTime: 0
+  hidePanelDelayTime: 0
   useScaleEffect: 1
   scaleFactor: 0.95
   scaleDuration: 0.1
@@ -3321,6 +3320,7 @@ GameObject:
   - component: {fileID: 6830970299687991182}
   - component: {fileID: 1233630674488984562}
   - component: {fileID: 203237963563873295}
+  - component: {fileID: 7278753922846347838}
   m_Layer: 5
   m_Name: Button - Setting
   m_TagString: Untagged
@@ -3441,6 +3441,32 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &7278753922846347838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7480135465331678911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051e562490984e74ba1cc52ca6ca7c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonEffect
+  autoPlay: 1
+  deltaTimeIndependent: 0
+  useClosePanelEffect: 1
+  showDelayTime: 0
+  hidePanelDelayTime: 0
+  useScaleEffect: 1
+  scaleFactor: 0.95
+  scaleDuration: 0.1
+  useRotationEffect: 0
+  rotationAngle: 360
+  rotationDuration: 0.3
+  useVibrationEffect: 1
+  useCooldown: 0
+  cooldownDuration: 0.5
 --- !u!1 &9021429204793691425
 GameObject:
   m_ObjectHideFlags: 0
