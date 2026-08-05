@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         stateMachine.RegisterState(GameStateType.Play, new PlayGameState(this, inputManager));
         stateMachine.RegisterState(GameStateType.Fail, new FailGameState(this, inputManager));
         stateMachine.RegisterState(GameStateType.Complete, new CompleteGameState(this, inputManager));
-        stateMachine.RegisterState(GameStateType.SettingInGame, new SettingInGameState(this, inputManager));
+        // stateMachine.RegisterState(GameStateType.SettingInGame, new SettingInGameState(this, inputManager));
         stateMachine.RegisterState(GameStateType.Loading, new LoadingGameState(this, inputManager));
     }
     private void ChangeGameState(GameStateType gameStateType)

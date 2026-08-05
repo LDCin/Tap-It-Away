@@ -87,6 +87,8 @@ GameObject:
   - component: {fileID: 2186627033674227147}
   - component: {fileID: -8386309308467371085}
   - component: {fileID: 4631760926708697636}
+  - component: {fileID: -2607163453227917535}
+  - component: {fileID: -4145739477753857171}
   m_Layer: 5
   m_Name: Panel - Loading
   m_TagString: Untagged
@@ -137,9 +139,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingPanel
   _destroyOnClose: 0
-  hasEffectOnOpen: 0
-  hasEffectOnClose: 0
   uiLayer: 0
+  progress: {fileID: 1030698800146498414}
+  loadingDuration: 2
 --- !u!114 &4631760926708697636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,6 +172,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &-2607163453227917535
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453549319971479755}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &-4145739477753857171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 453549319971479755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97bc70c59018f4643874aa521db83869, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIFadeUp
+  autoPlay: 1
+  deltaTimeIndependent: 0
+  useClosePanelEffect: 1
+  showDelayTime: 0
+  hidePanelDelayTime: 0
+  duration: 0.4
+  canInteractWhileFading: 1
 --- !u!1 &2115901971966340384
 GameObject:
   m_ObjectHideFlags: 0

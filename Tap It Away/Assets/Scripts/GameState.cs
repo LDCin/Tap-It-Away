@@ -14,8 +14,7 @@ public class PlayGameState : IState
 	{
 		inputManager.UnlockInput();
 		LevelManager.Instance.PlayGame();
-		
-		UIManager.Instance.OpenPanel(GameConfig.GAMEPLAY_PANEL);
+		UIManager.Instance.OpenPanel(GameConfig.GAMEPLAY_PANEL, true);
 	}
 
 	public void Excute()
@@ -95,7 +94,7 @@ public class MenuGameState : IState
 	public void Enter()
 	{
 		inputManager.LockInput();
-		UIManager.Instance.OpenPanel(GameConfig.MENU_PANEL);
+		UIManager.Instance.OpenPanel(GameConfig.MENU_PANEL, true);
 	}
 
 	public void Excute()
@@ -109,32 +108,32 @@ public class MenuGameState : IState
 	}
 }
 
-public class SettingInGameState : IState
-{
-	private GameManager gameManager;
-	private InputManager inputManager;
+// public class SettingInGameState : IState
+// {
+// 	private GameManager gameManager;
+// 	private InputManager inputManager;
 
-	public SettingInGameState(GameManager gameManager, InputManager inputManager)
-	{
-		this.gameManager = gameManager;
-		this.inputManager = inputManager;
-	}
-	public void Enter()
-	{
-		inputManager.LockInput();
-		UIManager.Instance.OpenPanel(GameConfig.SETTING_IN_GAME_PANEL);
-	}
+// 	public SettingInGameState(GameManager gameManager, InputManager inputManager)
+// 	{
+// 		this.gameManager = gameManager;
+// 		this.inputManager = inputManager;
+// 	}
+// 	public void Enter()
+// 	{
+// 		inputManager.LockInput();
+// 		UIManager.Instance.OpenPanel(GameConfig.SETTING_IN_GAME_PANEL);
+// 	}
 
-	public void Excute()
-	{
-	}
+// 	public void Excute()
+// 	{
+// 	}
 
-	public void Exit()
-	{
-		inputManager.UnlockInput();
-		UIManager.Instance.ClosePanel(GameConfig.SETTING_IN_GAME_PANEL);
-	}
-}
+// 	public void Exit()
+// 	{
+// 		inputManager.UnlockInput();
+// 		UIManager.Instance.ClosePanel(GameConfig.SETTING_IN_GAME_PANEL);
+// 	}
+// }
 
 public class LoadingGameState : IState
 {

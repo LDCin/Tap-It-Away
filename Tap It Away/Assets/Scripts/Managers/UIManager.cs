@@ -106,12 +106,44 @@ public class UIManager : Singleton<UIManager>
         _panelDict.Remove(panelName);
     }
 
-    public void OpenPanel(string panelName)
+    public void OpenPanel(string panelName, bool useLoading = false)
     {
-        OpenPanelAsync(panelName).Forget();
+        OpenPanelAsync(panelName, useLoading).Forget();
     }
 
-    public async UniTask OpenPanelAsync(string panelName)
+    public async UniTask OpenPanelAsync(string panelName, bool useLoading = false)
+    {
+        if (useLoading && !panelName.Equals(GameConfig.LOADING_PANEL))
+        {
+            await OpenPanelWithLoadingAsync(panelName);
+            return;
+        }
+
+        await OpenPanelInternalAsync(panelName);
+    }
+
+    private async UniTask OpenPanelWithLoadingAsync(string panelName)
+    {
+        await OpenPanelInternalAsync(GameConfig.LOADING_PANEL);
+
+        LoadingPanel loadingPanel = GetPanel(GameConfig.LOADING_PANEL) as LoadingPanel;
+
+        if (loadingPanel != null)
+        {
+            await UniTask.WaitUntil(() => loadingPanel.IsDone);
+        }
+
+        await OpenPanelInternalAsync(panelName);
+
+        if (loadingPanel != null)
+        {
+            loadingPanel.transform.SetAsLastSibling();
+        }
+
+        ClosePanel(GameConfig.LOADING_PANEL);
+    }
+
+    private async UniTask OpenPanelInternalAsync(string panelName)
     {
         await LoadPanel(panelName);
 
