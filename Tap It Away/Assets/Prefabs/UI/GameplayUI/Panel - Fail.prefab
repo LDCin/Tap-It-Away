@@ -231,7 +231,7 @@ MonoBehaviour:
   showDelayTime: 0
   hidePanelDelayTime: 0
   interval: 2
-  wiggleDuration: 0.45
+  wiggleDuration: 1
   angle: 8
   wiggleCount: 3
   scaleMultiplier: 1.08
@@ -329,7 +329,7 @@ MonoBehaviour:
   showDelayTime: 0
   hidePanelDelayTime: 0
   interval: 2
-  wiggleDuration: 0.45
+  wiggleDuration: 1
   angle: 8
   wiggleCount: 3
   scaleMultiplier: 1.08
@@ -346,6 +346,7 @@ GameObject:
   - component: {fileID: 2244628102041889590}
   - component: {fileID: 2022706719150494935}
   - component: {fileID: -1265099017521783316}
+  - component: {fileID: -7803780118441035948}
   m_Layer: 5
   m_Name: Panel - Fail
   m_TagString: Untagged
@@ -446,6 +447,18 @@ MonoBehaviour:
   panel: {fileID: 3411354684088323339}
   duration: 0.4
   canInteractWhileFading: 1
+--- !u!225 &-7803780118441035948
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3247785499163313831}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4003953073734903183
 GameObject:
   m_ObjectHideFlags: 0
