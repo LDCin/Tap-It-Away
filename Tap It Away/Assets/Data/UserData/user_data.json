@@ -1,5 +1,12 @@
 {
   "map": 1,
   "level": 3,
-  "coin": 100
+  "coin": 100,
+  "userBoosterDataList": [
+    {
+      "boosterType": "Hint",
+      "isUnlocked": true,
+      "count": 1
+    }
+  ]
 }

@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 3086165658844398513}
   - component: {fileID: 8866466752567163166}
   - component: {fileID: 7446043923238309295}
-  - component: {fileID: 5269259056614809666}
+  - component: {fileID: 4352280745868105155}
   m_Layer: 5
   m_Name: Button - Booster
   m_TagString: Untagged
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5269259056614809666
+--- !u!114 &4352280745868105155
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -376,9 +376,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2991230004341627358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2188443a3fd2fad47a8a5087e2c84558, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: Assembly-CSharp::BoosterButton
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0

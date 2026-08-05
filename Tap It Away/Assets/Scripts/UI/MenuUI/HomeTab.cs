@@ -49,22 +49,17 @@ public class HomeTab : Panel
 
     private void LoadCurrentLevel()
     {
-        UserData userData = GetUserData();
+        UserData userData = DataManager.Instance.CurrentUserData;
         if (userData == null)
         {
             return;
         }
 
-        currentLevelNumber = Mathf.Max(1, userData.level);
+        currentLevelNumber = (userData.map - 1) * 10 + userData.level;
     }
 
     private void RefreshLevelTree()
     {
-        if (levelTreeNodes == null)
-        {
-            return;
-        }
-
         for (int i = 0; i < levelTreeNodes.Count; i++)
         {
             LevelTreeNode node = levelTreeNodes[i];
@@ -86,15 +81,7 @@ public class HomeTab : Panel
         int levelNumber = currentLevelNumber;
         bool isHardLevel = IsHardLevel(levelNumber);
 
-        if (playLevelText != null)
-        {
-            playLevelText.text = $"Level {levelNumber}";
-        }
-
-        if (playButtonImage == null)
-        {
-            return;
-        }
+        playLevelText.text = $"Level + {levelNumber:00}";
 
         Sprite sprite = isHardLevel && hardPlayButtonSprite != null ? hardPlayButtonSprite : normalPlayButtonSprite;
         if (sprite != null)
@@ -119,20 +106,5 @@ public class HomeTab : Panel
         }
 
         return false;
-    }
-
-    private UserData GetUserData()
-    {
-        if (DataManager.Instance == null)
-        {
-            return null;
-        }
-
-        if (DataManager.Instance.CurrentUserData == null)
-        {
-            DataManager.Instance.LoadUserData();
-        }
-
-        return DataManager.Instance.CurrentUserData;
     }
 }

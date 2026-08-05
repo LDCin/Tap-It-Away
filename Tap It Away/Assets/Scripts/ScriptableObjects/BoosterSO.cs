@@ -10,4 +10,6 @@ public class BoosterSO : ScriptableObject
     public int activeCount;
     public bool deactive;
     public int price;
+    public int unlockLevel;
+    public int initialCount;
 }

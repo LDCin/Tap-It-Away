@@ -1049,14 +1049,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameplayPanel
   _destroyOnClose: 0
-  hasEffectOnOpen: 0
-  hasEffectOnClose: 0
   uiLayer: 0
   heartRoot: {fileID: 2562722480755422708}
   heartPrefab: {fileID: 6595555318466795516, guid: 7742685d5ab63894c8267080901beb27, type: 3}
   heartSprite: {fileID: 21300000, guid: 39d4d7d281d69cf4fa649e3010d70c2f, type: 3}
   brokenHeartSprite: {fileID: 21300000, guid: 9bd0582f5d493db43834b8643f5d8a80, type: 3}
   levelText: {fileID: 3860175838184123112}
+  boosterRoot: {fileID: 476578133730098451}
+  boosterButtonPrefab: {fileID: 4352280745868105155, guid: 59c9905c374cdf54abd30ed99a1e0192, type: 3}
 --- !u!114 &8751627857966164435
 MonoBehaviour:
   m_ObjectHideFlags: 0

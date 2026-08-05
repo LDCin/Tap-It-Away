@@ -19,4 +19,36 @@ public class BoosterLoader
         BoosterSO boosterSO = handle.Result;
         return boosterSO;
     }
+    public async UniTask<List<BoosterType>> LoadUnlockBooster()
+    {
+        List<BoosterType> unlockedBoosters = new();
+
+        UserData userData = DataManager.Instance.CurrentUserData;
+        if (userData == null)
+        {
+            DataManager.Instance.LoadUserData();
+            userData = DataManager.Instance.CurrentUserData;
+        }
+
+        if (userData == null || userData.userBoosterDataList == null)
+        {
+            return unlockedBoosters;
+        }
+
+        foreach (UserBoosterData boosterData in userData.userBoosterDataList)
+        {
+            if (boosterData == null || !boosterData.isUnlocked)
+            {
+                continue;
+            }
+
+            BoosterSO boosterSO = await LoadBoosterSOAsync(boosterData.boosterType);
+            if (boosterSO != null)
+            {
+                unlockedBoosters.Add(boosterSO.boosterType);
+            }
+        }
+
+        return unlockedBoosters;
+    }
 }

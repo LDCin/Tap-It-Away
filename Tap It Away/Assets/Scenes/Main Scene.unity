@@ -811,7 +811,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24ffecc3fbe0de94a814ac337a6eb522, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoosterController
+  m_EditorClassIdentifier: Assembly-CSharp::BoosterManager
 --- !u!1 &934567464
 GameObject:
   m_ObjectHideFlags: 0

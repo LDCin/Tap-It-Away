@@ -6,11 +6,28 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class BoosterManager : MonoBehaviour
+public class BoosterManager : Singleton<BoosterManager>
 {
     private BoosterLoader boosterLoader;
     private Dictionary<BoosterType, (BoosterBase, BoosterSO)> boosterDict;
-    private async void Awake()
+    private List<BoosterType> unlockedBoosters = new();
+    public List<BoosterType> UnlockedBoosters => unlockedBoosters;
+    public bool IsInitialized { get; private set; }
+
+    public override async void Awake()
+    {
+        base.Awake();
+        await InitializeBooster();
+        await InitializeUnlockBoosterList();
+        IsInitialized = true;
+    }
+
+    public async UniTask WaitUntilInitialized()
+    {
+        await UniTask.WaitUntil(() => IsInitialized);
+    }
+
+    private async UniTask InitializeBooster()
     {
         boosterLoader = new();
         BoosterSO hintBoosterSO = await boosterLoader.LoadBoosterSOAsync(BoosterType.Hint);
@@ -20,6 +37,11 @@ public class BoosterManager : MonoBehaviour
             {BoosterType.Hint, (new HintBooster(hintBoosterSO), hintBoosterSO)},
             {BoosterType.GhostCube, (new GhostCubeBooster(ghostCubeBoosterSO), ghostCubeBoosterSO)}
         };
+    }
+    private async UniTask InitializeUnlockBoosterList()
+    {
+        unlockedBoosters = new();
+        unlockedBoosters = await boosterLoader.LoadUnlockBooster();
     }
     public BoosterSO GetBoosterSO(BoosterType boosterType)
     {
