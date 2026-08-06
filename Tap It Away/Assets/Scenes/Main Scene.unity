@@ -589,6 +589,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &595332499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 595332501}
+  - component: {fileID: 595332500}
+  m_Layer: 0
+  m_Name: CubePool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &595332500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595332499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a8cf2eafc334c34a91fba16dfcb7d89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPool.CubePool
+  dontDestroyOnLoad: 1
+  cubePrefab: {fileID: -6461839634741941231, guid: e181a1a50d9a8b44fb3aadbc76dffa04, type: 3}
+  initialSize: 40
+  inactiveRoot: {fileID: 1627554987}
+--- !u!4 &595332501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595332499}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 934567465}
+  - {fileID: 1627554987}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &641649759
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,6 +741,10 @@ MonoBehaviour:
       m_Bits: 64
   dragThreshHold: 20
   rotateSensitivity: 0.65
+  mouseZoomSensitivity: 5
+  pinchZoomSensitivity: 0.08
+  minFov: 30
+  maxFov: 80
   puzzleRoot: {fileID: 934567465}
 --- !u!1 &810762647
 GameObject:
@@ -842,7 +896,7 @@ GameObject:
   m_Component:
   - component: {fileID: 934567465}
   m_Layer: 0
-  m_Name: Cubes
+  m_Name: ActiveRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -856,12 +910,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 934567464}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 595332501}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1159957629
 GameObject:
@@ -908,6 +962,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
   cubePrefab: {fileID: -6461839634741941231, guid: e181a1a50d9a8b44fb3aadbc76dffa04, type: 3}
+  cubePool: {fileID: 595332500}
   spawnRoot: {fileID: 934567464}
 --- !u!1 &1357460560
 GameObject:
@@ -1013,6 +1068,37 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   overlayCanvasRoot: {fileID: 1988009819}
   cameraCanvasRoot: {fileID: 1774955802}
+--- !u!1 &1627554986
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1627554987}
+  m_Layer: 0
+  m_Name: InactiveRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1627554987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627554986}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 595332501}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1744211449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1604,8 +1690,8 @@ SceneRoots:
   - {fileID: 1834930175}
   - {fileID: 810762648}
   - {fileID: 641649761}
+  - {fileID: 595332501}
   - {fileID: 868817606}
   - {fileID: 1448953118}
   - {fileID: 60167509}
   - {fileID: 1744211451}
-  - {fileID: 934567465}

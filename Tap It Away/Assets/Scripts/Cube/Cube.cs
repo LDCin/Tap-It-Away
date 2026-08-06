@@ -36,6 +36,7 @@ public class Cube : MonoBehaviour
     }
     public void InitBySO(CubeSO cubeData)
     {
+        ClearArrowQuads();
         cubeDirection = cubeData.cubeDirection;
         // SetColor(cubeData.cubeColor);
         quadConfigList = arrowQuadGenerator.GetQuadConfigs(cubeData.cubeDirection);
@@ -43,6 +44,7 @@ public class Cube : MonoBehaviour
     }
     public void InitByCubeData(CubeData cubeData)
     {
+        ClearArrowQuads();
         cubeDirection = cubeData.moveDirection;
         FreezePosition();
         cubeMover.CubeDirection = cubeDirection;
@@ -53,6 +55,11 @@ public class Cube : MonoBehaviour
         Color symbolColor = GetColorByCode(cubeData.symbolColor);
         InitVisual(cubeColor, symbolColor);
         // OnInitializationCompleted?.Invoke(cubeDirection);
+    }
+    public void ResetForPool()
+    {
+        ClearArrowQuads();
+        SetOpacity(1f);
     }
     private void SetColor(Color cubeColor)
     {
@@ -124,6 +131,7 @@ public class Cube : MonoBehaviour
             ArrowQuad arrowQuad = arrowQuadGenerator.CreateArrowQuad(quadConfig, arrowQuadGenerator.transform, quadPosition);
             bool isArrow = dot < 0.999f;
             arrowQuad.Init(symbolColor, isArrow);
+            quadList.Add(arrowQuad);
         }
     }
     private void SetTrailColor(Color cubeColor)
@@ -152,5 +160,23 @@ public class Cube : MonoBehaviour
     private void FreezePosition()
     {
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+    }
+
+    private void ClearArrowQuads()
+    {
+        quadList.Clear();
+
+        if (arrowQuadGenerator == null)
+        {
+            return;
+        }
+
+        Transform arrowRoot = arrowQuadGenerator.transform;
+        for (int i = arrowRoot.childCount - 1; i >= 0; i--)
+        {
+            GameObject arrowObject = arrowRoot.GetChild(i).gameObject;
+            arrowObject.SetActive(false);
+            Destroy(arrowObject);
+        }
     }
 }

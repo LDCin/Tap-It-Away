@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using System.Collections;
+using ObjectPool;
 // using NUnit.Framework;
 
 public class CubeMover : MonoBehaviour
@@ -34,6 +35,7 @@ public class CubeMover : MonoBehaviour
     private Vector3 originalLocalPosition;
     private Quaternion originalLocalRotation;
     private Vector3 originalLocalScale;
+    private CubePool cubePool;
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
@@ -53,6 +55,31 @@ public class CubeMover : MonoBehaviour
     public void SetGhost(bool ghost)
     {
         isGhost = ghost;
+    }
+    public void SetPool(CubePool pool)
+    {
+        cubePool = pool;
+    }
+    public void ResetForSpawn()
+    {
+        tween?.Kill();
+        tween = null;
+        isMoving = false;
+        isShaking = false;
+        isBlocked = false;
+        isGhost = false;
+        isRemovedFromLevelList = false;
+        isRemovedFromLevelState = false;
+        originalParent = null;
+        transform.localScale = originalScale;
+        EnableCollider();
+        DisableTrail();
+    }
+    public void ResetForPool()
+    {
+        ResetForSpawn();
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
     public bool CanMove()
     {
@@ -112,6 +139,14 @@ public class CubeMover : MonoBehaviour
     {
         RemoveFromLevelList();
         RemoveFromLevelState();
+
+        Cube cube = GetComponent<Cube>();
+        if (cubePool != null && cube != null)
+        {
+            cubePool.ReturnCube(cube);
+            return;
+        }
+
         Destroy(gameObject);
     }
 

@@ -4,9 +4,11 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using ObjectPool;
 public class LevelLoader : MonoBehaviour
 {
     [SerializeField] private Cube cubePrefab;
+    [SerializeField] private CubePool cubePool;
     [SerializeField] private GameObject spawnRoot;
     private List<CubeMover> cubeList;
     private Vector3 spawnRootInitialLocalPosition;
@@ -32,9 +34,7 @@ public class LevelLoader : MonoBehaviour
         LevelData levelData = LoadLevelFromTextAsset(levelDataFile);
         foreach (var cube in levelData.cubes)
         {
-            Cube newCube = Instantiate(cubePrefab, spawnRoot.transform);
-            newCube.InitByCubeData(cube);
-            cubeList.Add(newCube.GetComponent<CubeMover>());
+            SpawnCube(cube);
         }
     }
     public async UniTask SpawnLevelFromJsonAsync(string jsonFileName)
@@ -54,9 +54,7 @@ public class LevelLoader : MonoBehaviour
         LevelData levelData = JsonConvert.DeserializeObject<LevelData>(handle.Result.text);
         foreach (var cube in levelData.cubes)
         {
-            Cube newCube = Instantiate(cubePrefab, spawnRoot.transform);
-            newCube.InitByCubeData(cube);
-            cubeList.Add(newCube.gameObject.GetComponent<CubeMover>());
+            SpawnCube(cube);
         }
         Addressables.Release(handle);
     }
@@ -69,10 +67,7 @@ public class LevelLoader : MonoBehaviour
 
         foreach (CubeMover cubeMover in cubeList)
         {
-            if (cubeMover != null)
-            {
-                Destroy(cubeMover.gameObject);
-            }
+            ReturnOrDestroyCube(cubeMover);
         }
 
         cubeList.Clear();
@@ -120,7 +115,67 @@ public class LevelLoader : MonoBehaviour
         Transform rootTransform = spawnRoot.transform;
         for (int i = rootTransform.childCount - 1; i >= 0; i--)
         {
-            Destroy(rootTransform.GetChild(i).gameObject);
+            ReturnOrDestroyChild(rootTransform.GetChild(i));
         }
+    }
+
+    private void ReturnOrDestroyChild(Transform child)
+    {
+        if (child == null)
+        {
+            return;
+        }
+
+        CubeMover cubeMover = child.GetComponent<CubeMover>();
+        if (cubeMover != null)
+        {
+            ReturnOrDestroyCube(cubeMover);
+            return;
+        }
+
+        Destroy(child.gameObject);
+    }
+
+    private void SpawnCube(CubeData cubeData)
+    {
+        CubePool activeCubePool = GetCubePool();
+        Cube newCube = activeCubePool != null
+            ? activeCubePool.GetCube(cubeData, spawnRoot.transform)
+            : Instantiate(cubePrefab, spawnRoot.transform);
+
+        if (newCube == null)
+        {
+            return;
+        }
+
+        if (activeCubePool == null)
+        {
+            newCube.InitByCubeData(cubeData);
+        }
+
+        cubeList.Add(newCube.GetComponent<CubeMover>());
+    }
+
+    private void ReturnOrDestroyCube(CubeMover cubeMover)
+    {
+        if (cubeMover == null)
+        {
+            return;
+        }
+
+        Cube cube = cubeMover.GetComponent<Cube>();
+        CubePool activeCubePool = GetCubePool();
+        if (activeCubePool != null && cube != null)
+        {
+            activeCubePool.ReturnCube(cube);
+            return;
+        }
+
+        Destroy(cubeMover.gameObject);
+    }
+
+    private CubePool GetCubePool()
+    {
+        return cubePool != null ? cubePool : CubePool.Instance;
     }
 }
