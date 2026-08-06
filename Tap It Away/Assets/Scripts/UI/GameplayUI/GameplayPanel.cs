@@ -32,6 +32,7 @@ public class GameplayPanel : Panel
     [Header("Booster")]
     [SerializeField] private Transform boosterRoot;
     [SerializeField] private BoosterButton boosterButtonPrefab;
+    [SerializeField] private TutorialPanel tutorialPanel;
     private List<BoosterButton> boosters;
     private int currentHeartCount;
 
@@ -198,6 +199,7 @@ public class GameplayPanel : Panel
         }
 
         await BoosterManager.Instance.WaitUntilInitialized();
+        BoosterManager.Instance.SyncUnlocksForCurrentLevel();
 
         if (!isActiveAndEnabled)
         {
@@ -219,6 +221,24 @@ public class GameplayPanel : Panel
         }
 
         AudioManager.Instance?.RegisterButtonClickSounds(transform);
+        ShowBoosterTutorialIfNeeded();
+    }
+
+    private void ShowBoosterTutorialIfNeeded()
+    {
+        if (BoosterManager.Instance == null || !BoosterManager.Instance.TryGetUnshownUnlockedBooster(out BoosterType boosterType))
+        {
+            return;
+        }
+
+        if (tutorialPanel == null)
+        {
+            Debug.LogWarning("Tutorial panel is missing.");
+            return;
+        }
+
+        tutorialPanel.Init(boosterType);
+        tutorialPanel.Open();
     }
 
     private void ClearBoosters()

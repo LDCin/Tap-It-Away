@@ -20,6 +20,7 @@ public class UserBoosterData
 {
     public BoosterType boosterType;
     public bool isUnlocked;
+    public bool tutorialShown;
     public int count;
 
     public UserBoosterData(BoosterType boosterType, bool isUnlocked, int count)

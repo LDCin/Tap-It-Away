@@ -142,7 +142,7 @@ MonoBehaviour:
   uiLayer: 0
   backgroundImage: {fileID: 1695936470097191619}
   progress: {fileID: 1030698800146498414}
-  loadingDuration: 2
+  loadingDuration: 1
 --- !u!114 &4631760926708697636
 MonoBehaviour:
   m_ObjectHideFlags: 0

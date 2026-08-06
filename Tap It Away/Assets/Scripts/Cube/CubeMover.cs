@@ -26,6 +26,7 @@ public class CubeMover : MonoBehaviour
     private Tween tween;
     private BoxCollider boxCollider;
     private Rigidbody rb;
+    private TrailRenderer trailRenderer;
     private Vector3 originalScale;
     private bool isRemovedFromLevelList = false;
     private bool isRemovedFromLevelState = false;
@@ -37,6 +38,8 @@ public class CubeMover : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
+        trailRenderer = GetComponent<TrailRenderer>();
+        DisableTrail();
         originalScale = transform.localScale;
     }
     public void DisableCollider()
@@ -102,6 +105,7 @@ public class CubeMover : MonoBehaviour
 
         StartPosition = transform.position;
         Vector3 directionVector = CubeDirectionHelper.GetWorldDirection(CubeDirection, transform);
+        EnableTrail();
         Move(transform.position + directionVector * moveDistance, OnMoveOutCompleted, !canMoveOut);
     }
     private void OnMoveOutCompleted()
@@ -158,6 +162,7 @@ public class CubeMover : MonoBehaviour
     }
     private void OnReturnToStartPositionCompleted()
     {
+        DisableTrail();
         ReattachToPuzzleRoot();
         isRemovedFromLevelList = false;
         OnCubeReturnedWithReference?.Invoke(this);
@@ -178,6 +183,26 @@ public class CubeMover : MonoBehaviour
     {
         yield return new WaitForSeconds(delayTime);
         isMoving = false;
+    }
+    private void EnableTrail()
+    {
+        if (trailRenderer == null)
+        {
+            return;
+        }
+
+        trailRenderer.Clear();
+        trailRenderer.emitting = true;
+    }
+    private void DisableTrail()
+    {
+        if (trailRenderer == null)
+        {
+            return;
+        }
+
+        trailRenderer.emitting = false;
+        trailRenderer.Clear();
     }
     public void ShakeCube(bool loop = false)
     {

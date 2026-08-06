@@ -15,6 +15,7 @@ public class HomeTab : Panel
     [SerializeField] private Sprite normalPlayButtonSprite;
     [SerializeField] private Sprite hardPlayButtonSprite;
     [SerializeField] private TMP_Text playLevelText;
+    [SerializeField] private TMP_Text coinText;
 
     [Header("Player Progress")]
     [SerializeField, Min(1)] private int currentLevelNumber = 1;
@@ -22,14 +23,21 @@ public class HomeTab : Panel
 
     private void OnEnable()
     {
+        DataManager.OnCoinsChanged += UpdateCoinText;
         LoadCurrentLevel();
         UpdateVisual();
+    }
+
+    private void OnDisable()
+    {
+        DataManager.OnCoinsChanged -= UpdateCoinText;
     }
 
     public override void UpdateVisual()
     {
         RefreshLevelTree();
         RefreshPlayButton();
+        UpdateCoinText(DataManager.Instance != null ? DataManager.Instance.GetCoins() : 0);
     }
 
     public void OnPlayButtonClicked()
@@ -106,5 +114,15 @@ public class HomeTab : Panel
         }
 
         return false;
+    }
+
+    private void UpdateCoinText(int coins)
+    {
+        if (coinText == null)
+        {
+            return;
+        }
+
+        coinText.text = coins.ToString();
     }
 }

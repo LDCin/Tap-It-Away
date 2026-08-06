@@ -10,7 +10,10 @@ public class Cube : MonoBehaviour
     [SerializeField] private ArrowQuadGenerator arrowQuadGenerator;
     [SerializeField] private CubeMover cubeMover;
     [SerializeField] private float ghostOpacity = 0.8f;
+    [SerializeField] private float trailStartOpacity = 0.6f;
+    [SerializeField] private float trailEndOpacity = 0f;
     private MeshRenderer meshRenderer;
+    private TrailRenderer trailRenderer;
     private Rigidbody rb;
     private readonly int BaseColorID = Shader.PropertyToID("_BaseColor");
     private MaterialPropertyBlock cubeMaterialPropertyBlock;
@@ -20,6 +23,7 @@ public class Cube : MonoBehaviour
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        trailRenderer = GetComponent<TrailRenderer>();
         rb = GetComponent<Rigidbody>();
         cubeBound = meshRenderer.localBounds;
         quadList = new List<ArrowQuad>();
@@ -106,6 +110,7 @@ public class Cube : MonoBehaviour
     private void InitVisual(Color cubeColor, Color symbolColor)
     {
         SetColor(cubeColor);
+        SetTrailColor(cubeColor);
         Vector3 moveDirection = CubeDirectionHelper.GetDirectionVector(cubeDirection);
 
         foreach (QuadConfig quadConfig in quadConfigList)
@@ -120,6 +125,29 @@ public class Cube : MonoBehaviour
             bool isArrow = dot < 0.999f;
             arrowQuad.Init(symbolColor, isArrow);
         }
+    }
+    private void SetTrailColor(Color cubeColor)
+    {
+        if (trailRenderer == null)
+        {
+            return;
+        }
+
+        Gradient trailGradient = new();
+        trailGradient.SetKeys(
+            new[]
+            {
+                new GradientColorKey(cubeColor, 0f),
+                new GradientColorKey(cubeColor, 1f)
+            },
+            new[]
+            {
+                new GradientAlphaKey(trailStartOpacity, 0f),
+                new GradientAlphaKey(trailEndOpacity, 1f)
+            }
+        );
+
+        trailRenderer.colorGradient = trailGradient;
     }
     private void FreezePosition()
     {

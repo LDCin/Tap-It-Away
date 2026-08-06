@@ -25,6 +25,11 @@ public abstract class Panel : MonoBehaviour
     }
     public void Close()
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (_destroyOnClose)
         {
             UIManager.Instance?.UnregisterPanel(name);

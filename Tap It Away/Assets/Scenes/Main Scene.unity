@@ -907,7 +907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a157eccd66845e4688b7c42fc5480d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
-  cubePrefab: {fileID: 4705002411133471821, guid: 46dc9a54b5aaba04fa0390ff56ea3e1b, type: 3}
+  cubePrefab: {fileID: -6461839634741941231, guid: e181a1a50d9a8b44fb3aadbc76dffa04, type: 3}
   spawnRoot: {fileID: 934567464}
 --- !u!1 &1357460560
 GameObject:
@@ -944,7 +944,7 @@ MonoBehaviour:
     map: 1
     level: 1
     coins: 0
-    themeType: 0
+    themeType: 1
     bgmEnabled: 1
     sfxEnabled: 1
     hapticEnabled: 1
@@ -1414,6 +1414,7 @@ MonoBehaviour:
   cubeBlockSound: {fileID: 8300000, guid: b71d3caf3b381b94ab7f1060f5358011, type: 3}
   levelSuccessSound: {fileID: 8300000, guid: 8f347728cf68b1c4d966c9d1a0409bfd, type: 3}
   levelFailSound: {fileID: 8300000, guid: a67f7a2c924f1a2499a4fbc760250a70, type: 3}
+  coinFlySound: {fileID: 8300000, guid: 717877a0e465f4ac69c4873da8ddd967, type: 3}
 --- !u!1 &1988009815
 GameObject:
   m_ObjectHideFlags: 0

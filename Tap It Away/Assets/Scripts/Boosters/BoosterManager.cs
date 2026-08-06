@@ -17,6 +17,7 @@ public class BoosterManager : Singleton<BoosterManager>
     {
         base.Awake();
         await InitializeBooster();
+        SyncUnlocksForCurrentLevel();
         await InitializeUnlockBoosterList();
         IsInitialized = true;
     }
@@ -61,6 +62,7 @@ public class BoosterManager : Singleton<BoosterManager>
 
     public bool IsBoosterUnlocked(BoosterType boosterType)
     {
+        SyncUnlocksForCurrentLevel();
         UserBoosterData boosterData = GetUserBoosterData(boosterType);
         return boosterData != null && boosterData.isUnlocked;
     }
@@ -115,8 +117,119 @@ public class BoosterManager : Singleton<BoosterManager>
         }
 
         boosterData.count--;
+        DataManager.Instance.SaveUserData();
         OnBoosterCountChanged?.Invoke(boosterType, boosterData.count);
         return true;
+    }
+
+    public void SyncUnlocksForCurrentLevel()
+    {
+        if (boosterDict == null || DataManager.Instance == null)
+        {
+            return;
+        }
+
+        UserData userData = DataManager.Instance.CurrentUserData;
+        if (userData == null)
+        {
+            DataManager.Instance.LoadUserData();
+            userData = DataManager.Instance.CurrentUserData;
+        }
+
+        if (userData == null)
+        {
+            return;
+        }
+
+        bool changed = false;
+
+        if (userData.userBoosterDataList == null)
+        {
+            userData.userBoosterDataList = new List<UserBoosterData>();
+            changed = true;
+        }
+
+        int currentLevel = DataManager.Instance.GetCurrentLevelNumber();
+
+        foreach (var boosterPair in boosterDict)
+        {
+            BoosterType boosterType = boosterPair.Key;
+            BoosterSO boosterSO = boosterPair.Value.Item2;
+            if (boosterSO == null)
+            {
+                continue;
+            }
+
+            UserBoosterData boosterData = GetOrCreateUserBoosterData(userData, boosterType, ref changed);
+            bool shouldUnlock = currentLevel >= boosterSO.unlockLevel;
+
+            if (!boosterData.isUnlocked && shouldUnlock)
+            {
+                boosterData.isUnlocked = true;
+                boosterData.count += boosterSO.initialCount;
+                changed = true;
+            }
+
+            if (boosterData.isUnlocked && !unlockedBoosters.Contains(boosterType))
+            {
+                unlockedBoosters.Add(boosterType);
+            }
+        }
+
+        if (changed)
+        {
+            DataManager.Instance.SaveUserData();
+        }
+    }
+
+    public bool TryGetUnshownUnlockedBooster(out BoosterType boosterType)
+    {
+        boosterType = default;
+
+        if (boosterDict == null)
+        {
+            return false;
+        }
+
+        foreach (BoosterType currentBoosterType in boosterDict.Keys)
+        {
+            UserBoosterData boosterData = GetUserBoosterData(currentBoosterType);
+            if (boosterData != null && boosterData.isUnlocked && !boosterData.tutorialShown)
+            {
+                boosterType = currentBoosterType;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void MarkBoosterTutorialShown(BoosterType boosterType)
+    {
+        UserBoosterData boosterData = GetUserBoosterData(boosterType);
+        if (boosterData == null || boosterData.tutorialShown)
+        {
+            return;
+        }
+
+        boosterData.tutorialShown = true;
+        DataManager.Instance.SaveUserData();
+    }
+
+    private UserBoosterData GetOrCreateUserBoosterData(UserData userData, BoosterType boosterType, ref bool changed)
+    {
+        foreach (UserBoosterData boosterData in userData.userBoosterDataList)
+        {
+            if (boosterData != null && boosterData.boosterType == boosterType)
+            {
+                return boosterData;
+            }
+        }
+
+        UserBoosterData newBoosterData = new(boosterType, false, 0);
+        userData.userBoosterDataList.Add(newBoosterData);
+        changed = true;
+        return newBoosterData;
     }
 
     private UserBoosterData GetUserBoosterData(BoosterType boosterType)

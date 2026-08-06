@@ -15,6 +15,7 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private AudioClip cubeBlockSound;
     [SerializeField] private AudioClip levelSuccessSound;
     [SerializeField] private AudioClip levelFailSound;
+    [SerializeField] private AudioClip coinFlySound;
 
     public override void Awake()
     {
@@ -220,6 +221,11 @@ public class AudioManager : Singleton<AudioManager>
     public void PlayLevelFailSound()
     {
         PlayOneShot(levelFailSound != null ? levelFailSound : defaultSfx, "Level Fail Sound");
+    }
+
+    public void PlayCoinFlySound()
+    {
+        PlayOneShot(coinFlySound != null ? coinFlySound : defaultSfx, "Coin Fly Sound");
     }
 
     private void HandleTapCube(CubeMover cubeMover)

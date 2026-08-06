@@ -9,6 +9,7 @@ using UnityEditor;
 public class DataManager : Singleton<DataManager>
 {
     public static event System.Action OnSettingsChanged;
+    public static event System.Action<int> OnCoinsChanged;
 
     private const string UserDataFileName = "user_data.json";
 
@@ -195,6 +196,28 @@ public class DataManager : Singleton<DataManager>
         }
 
         return userData != null;
+    }
+
+    public int GetCoins()
+    {
+        if (!EnsureUserDataLoaded())
+        {
+            return 0;
+        }
+
+        return userData.coins;
+    }
+
+    public void AddCoins(int amount)
+    {
+        if (amount <= 0 || !EnsureUserDataLoaded())
+        {
+            return;
+        }
+
+        userData.coins += amount;
+        SaveUserData();
+        OnCoinsChanged?.Invoke(userData.coins);
     }
 
     public void AdvanceToNextLevel()

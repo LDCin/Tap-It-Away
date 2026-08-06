@@ -8,6 +8,11 @@ public class InputManager : Singleton<InputManager>
     [SerializeField] private CastConfig castConfig;
     [SerializeField, Range(0.1f, 30f)] private float dragThreshHold = 20f;
     [SerializeField, Range(0.1f, 2f)] private float rotateSensitivity = 1f;
+    [Header("Zoom")]
+    [SerializeField, Range(1f, 20f)] private float mouseZoomSensitivity = 5f;
+    [SerializeField, Range(0.01f, 1f)] private float pinchZoomSensitivity = 0.08f;
+    [SerializeField, Range(1f, 179f)] private float minFov = 30f;
+    [SerializeField, Range(1f, 179f)] private float maxFov = 80f;
     [SerializeField] private Transform puzzleRoot;
     private bool isLocked = false;
     private Vector2 touchBeganPosition;
@@ -27,6 +32,10 @@ public class InputManager : Singleton<InputManager>
         }
 
         CachePuzzleRootTransform();
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
     }
 
     private void Update()
@@ -35,6 +44,14 @@ public class InputManager : Singleton<InputManager>
         {
             return;
         }
+
+        if (Input.touchCount >= 2)
+        {
+            HandlePinchZoom(Input.GetTouch(0), Input.GetTouch(1));
+            ResetTouch();
+            return;
+        }
+
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -60,11 +77,13 @@ public class InputManager : Singleton<InputManager>
                     break;
             }
         }
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
         if (Input.GetMouseButtonDown(0))
         {
             // GetFirstCubeOnRaycast(Input.mousePosition);
         }
+
+        HandleMouseZoom();
 #endif
     }
     private CubeMover GetFirstCubeOnRaycast(Vector2 screenPosition)
@@ -126,6 +145,49 @@ public class InputManager : Singleton<InputManager>
 
         puzzleRoot.Rotate(Vector3.up, horizontalAngle, Space.World);
         puzzleRoot.Rotate(mainCamera.transform.right, verticalAngle, Space.World);
+    }
+
+    private void HandleMouseZoom()
+    {
+        float scrollDelta = Input.mouseScrollDelta.y;
+        if (Mathf.Abs(scrollDelta) <= 0.001f)
+        {
+            scrollDelta = Input.GetAxis("Mouse ScrollWheel") * 10f;
+        }
+
+        if (Mathf.Abs(scrollDelta) <= 0.001f)
+        {
+            return;
+        }
+
+        ZoomByDelta(-scrollDelta * mouseZoomSensitivity);
+    }
+
+    private void HandlePinchZoom(Touch firstTouch, Touch secondTouch)
+    {
+        Vector2 firstPreviousPosition = firstTouch.position - firstTouch.deltaPosition;
+        Vector2 secondPreviousPosition = secondTouch.position - secondTouch.deltaPosition;
+
+        float previousDistance = Vector2.Distance(firstPreviousPosition, secondPreviousPosition);
+        float currentDistance = Vector2.Distance(firstTouch.position, secondTouch.position);
+        float pinchDelta = currentDistance - previousDistance;
+
+        if (Mathf.Abs(pinchDelta) <= 0.01f)
+        {
+            return;
+        }
+
+        ZoomByDelta(-pinchDelta * pinchZoomSensitivity);
+    }
+
+    private void ZoomByDelta(float fovDelta)
+    {
+        if (mainCamera == null)
+        {
+            return;
+        }
+
+        mainCamera.fieldOfView = Mathf.Clamp(mainCamera.fieldOfView + fovDelta, minFov, maxFov);
     }
     public void LockInput()
     {

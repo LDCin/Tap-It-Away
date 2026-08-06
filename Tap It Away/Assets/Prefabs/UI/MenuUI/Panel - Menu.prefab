@@ -2256,6 +2256,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6151920731964713157, guid: 9e7ae64ffa5ac2c46a23b0eb2f03ccdf, type: 3}
+      propertyPath: m_Name
+      value: Image - Coin Frame
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
