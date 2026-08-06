@@ -11,6 +11,7 @@ public class SuccessPanel : Panel
 
     [SerializeField] private Image congratulationTextImage;
     [SerializeField] private List<Sprite> congratulationTextSprites;
+    [SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private UIFlyingItemsEffect coinRewardEffect;
 
@@ -35,6 +36,7 @@ public class SuccessPanel : Panel
     public override void UpdateVisual()
     {
         ShowRandomCongratulationText();
+        UpdateLevelText();
         UpdateCoinText(DataManager.Instance != null ? DataManager.Instance.GetCoins() : 0);
     }
 
@@ -103,5 +105,15 @@ public class SuccessPanel : Panel
         }
 
         coinText.text = coins.ToString();
+    }
+
+    private void UpdateLevelText()
+    {
+        if (levelText == null || LevelManager.Instance == null)
+        {
+            return;
+        }
+
+        levelText.text = LevelManager.Instance.LevelDisplayName;
     }
 }
