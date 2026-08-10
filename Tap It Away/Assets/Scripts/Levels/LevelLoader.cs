@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 public class LevelLoader : MonoBehaviour
 {
-    [SerializeField] private Cube cubePrefab;
+    [SerializeField] private CubeVisual cubePrefab;
     [SerializeField] private GameObject spawnRoot;
     private List<CubeMover> cubeList;
     public List<CubeMover> CubeList => cubeList;
@@ -26,8 +26,8 @@ public class LevelLoader : MonoBehaviour
         LevelData levelData = LoadLevelFromTextAsset(levelDataFile);
         foreach (var cube in levelData.cubes)
         {
-            Cube newCube = Instantiate(cubePrefab, spawnRoot.transform);
-            newCube.InitByCubeData(cube);
+            CubeVisual newCube = Instantiate(cubePrefab, spawnRoot.transform);
+            newCube.InitByCubeData(cube, spawnRoot.transform);
             newCube.transform.localPosition = cube.position;
         }
     }
@@ -46,8 +46,8 @@ public class LevelLoader : MonoBehaviour
         LevelData levelData = JsonConvert.DeserializeObject<LevelData>(handle.Result.text);
         foreach (var cube in levelData.cubes)
         {
-            Cube newCube = Instantiate(cubePrefab, spawnRoot.transform);
-            newCube.InitByCubeData(cube);
+            CubeVisual newCube = Instantiate(cubePrefab, spawnRoot.transform);
+            newCube.InitByCubeData(cube, spawnRoot.transform);
             cubeList.Add(newCube.gameObject.GetComponent<CubeMover>());
         }
         Addressables.Release(handle);

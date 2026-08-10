@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 public class LevelManager : Singleton<LevelManager>
 {
-    public static event Action<int> OnCubeCountChanged;
-    public static event Action<int> OnHeartCountChanged;
-    public static event Action OnLevelCompleted;
-    public static event Action OnLevelFailed;
-    public static event Action OnLevelLoaded;
     [SerializeField] private LevelLoader levelLoader;
 #if UNITY_EDITOR
     [SerializeField] private TextAsset levelDataFile;
@@ -30,13 +25,13 @@ public class LevelManager : Singleton<LevelManager>
     }
     private void OnEnable()
     {
-        CubeMover.OnCubeRemoved += HandleCubeRemoved;
-        CubeMover.OnCubeBlock += HandleCubeBlocked;
+        Observer.Subscribe(ObserverEvent.CubeRemoved, HandleCubeRemoved);
+        Observer.Subscribe(ObserverEvent.CubeBlocked, HandleCubeBlocked);
     }
     private void OnDisable()
     {
-        CubeMover.OnCubeRemoved -= HandleCubeRemoved;
-        CubeMover.OnCubeBlock -= HandleCubeBlocked;
+        Observer.Unsubscribe(ObserverEvent.CubeRemoved, HandleCubeRemoved);
+        Observer.Unsubscribe(ObserverEvent.CubeBlocked, HandleCubeBlocked);
     }
     [ContextMenu("Test Start Level")]
     private async UniTask StartLevel()
@@ -60,19 +55,19 @@ public class LevelManager : Singleton<LevelManager>
             levelCubeList = new(levelLoader.CubeList);
             Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
             Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
-            OnLevelLoaded?.Invoke();
+            Observer.Publish(ObserverEvent.LevelLoaded);
         }
     }
     public void HandleCubeRemoved()
     {
         CurrentLevelState.RemoveCube();
         Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
-        OnCubeCountChanged?.Invoke(CurrentLevelState.RemainingCubeCount);
+        Observer.Publish(ObserverEvent.CubeCountChanged, CurrentLevelState.RemainingCubeCount);
 
         if (CurrentLevelState.IsCompleted)
         {
             Debug.Log("Win game");
-            OnLevelCompleted?.Invoke();
+            Observer.Publish(ObserverEvent.LevelCompleted);
         }
     }
 
@@ -80,12 +75,12 @@ public class LevelManager : Singleton<LevelManager>
     {
         CurrentLevelState.LoseHeart();
         Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
-        OnHeartCountChanged?.Invoke(CurrentLevelState.RemainingHeartCount);
+        Observer.Publish(ObserverEvent.HeartCountChanged, CurrentLevelState.RemainingHeartCount);
 
         if (CurrentLevelState.IsFailed)
         {
             Debug.Log("Lose game");
-            OnLevelFailed?.Invoke();
+            Observer.Publish(ObserverEvent.LevelFailed);
         }
     }
 

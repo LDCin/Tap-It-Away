@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class HomeTab : Panel
 {
-    public static event Action OnPlayGame;
-
     [SerializeField] private List<LevelTreeNode> levelTreeNodes;
     [SerializeField] private Panel noAdsPanel;
     [Header("Play Button")]
@@ -34,7 +32,7 @@ public class HomeTab : Panel
 
     public void OnPlayButtonClicked()
     {
-        OnPlayGame?.Invoke();
+        Observer.Publish(ObserverEvent.PlayGame);
     }
 
     public void OnSettingButtonClicked()

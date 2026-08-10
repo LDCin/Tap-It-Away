@@ -6,8 +6,6 @@ using System.Collections;
 
 public class CubeMover : MonoBehaviour
 {
-    public static event Action OnCubeBlock;
-    public static event Action OnCubeRemoved;
     [SerializeField] private float moveSpeed = 1;
     [SerializeField] private float moveDistance = 50;
     // [SerializeField] private float collisionSkin = 0.02f;
@@ -16,19 +14,23 @@ public class CubeMover : MonoBehaviour
     [SerializeField] private float scaleTime = 0.1f;
     [SerializeField] private float delayActionTime = 1f;
     [SerializeField] private CastConfig castConfig;
+    [SerializeField] private CubeVisual cubeVisual;
     public CubeDirection CubeDirection { get; set; }
     public Vector3 StartPosition { get; set; }
     private bool isMoving = false;
+    public bool IsMoving => isMoving;
     private bool isShaking = false;
     [SerializeField] private bool isGhost = false;
     private Tween tween;
     private BoxCollider boxCollider;
     private Rigidbody rb;
     private Vector3 originalScale;
+    private Coroutine delayTouchCoroutine;
     private void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
+        cubeVisual = GetComponent<CubeVisual>();
         originalScale = transform.localScale;
     }
     public void DisableCollider()
@@ -53,12 +55,23 @@ public class CubeMover : MonoBehaviour
         }
         return true;
     }
-    private void Move(Vector3 position, Action onMoveComplete = null)
+    private void Move(Vector3 position, bool useTrail, Action onMoveComplete = null)
     {
-        isBlocked = false;
         isMoving = true;
 
         tween?.Kill();
+        // Observer.Publish(ObserverEvent.OnCubeMove);
+
+        if (useTrail)
+        {
+            cubeVisual.ChangeTrailRendererState(true);
+            cubeVisual.SetHasParent(false);
+        }
+        else
+        {
+            cubeVisual.ChangeTrailRendererState(false);
+        }
+
         float duration = Vector3.Distance(transform.position, position) / moveSpeed;
         tween = rb.DOMove(position, duration)
         .SetEase(Ease.OutQuad)
@@ -66,9 +79,8 @@ public class CubeMover : MonoBehaviour
         .OnComplete(() =>
         {
             tween = null;
-            StartCoroutine(DelayTouch(delayActionTime));
-            EnableCollider();
-            SetGhost(false);
+            delayTouchCoroutine = StartCoroutine(DelayTouch(delayActionTime));
+            ResetToIdleState();
             onMoveComplete?.Invoke();
         });
     }
@@ -80,26 +92,25 @@ public class CubeMover : MonoBehaviour
         }
         StartPosition = transform.position;
         Vector3 directionVector = CubeDirectionHelper.GetWorldDirection(CubeDirection, transform);
-        Move(transform.position + directionVector * moveDistance, OnMoveOutCompleted);
+        Move(transform.position + directionVector * moveDistance, true, OnMoveOutCompleted);
     }
     private void OnMoveOutCompleted()
     {
-        OnCubeRemoved?.Invoke();
+        Observer.Publish(ObserverEvent.CubeRemoved);
         Destroy(gameObject);
     }
     private void ReturnToStartPosition()
     {
-        Move(StartPosition);
+        Move(StartPosition, false, null);
     }
     private IEnumerator DelayTouch(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
         isMoving = false;
+        delayTouchCoroutine = null;
     }
     public void ShakeCube(bool loop = false)
     {
-        // boxCollider.enabled = false;
-
         tween?.Kill();
         transform.localScale = originalScale;
 
@@ -135,8 +146,13 @@ public class CubeMover : MonoBehaviour
             return;
         }
 
+        // CubeMover otherCube = other.GetComponent<CubeMover>();
         if (!isMoving)
         {
+            // if (otherCube.IsMoving)
+            // {
+            //     ShakeCube();
+            // }
             ShakeCube();
             return;
         }
@@ -144,9 +160,29 @@ public class CubeMover : MonoBehaviour
         if (!isBlocked)
         {
             isBlocked = true;
-            OnCubeBlock?.Invoke();
+            Observer.Publish(ObserverEvent.CubeBlocked);
         }
         // tween?.Kill();
         ReturnToStartPosition();
+    }
+    public void ResetToIdleState()
+    {
+        isMoving = false;
+        isShaking = false;
+        SetGhost(false);
+        EnableCollider();
+
+        transform.localScale = originalScale;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        if (cubeVisual != null)
+        {
+            cubeVisual.ResetToInitialState();
+        }
     }
 }

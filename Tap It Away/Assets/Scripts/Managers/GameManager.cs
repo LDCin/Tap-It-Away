@@ -10,14 +10,16 @@ public class GameManager : MonoBehaviour
     private StateMachine stateMachine;
     private void OnEnable()
     {
-        HomeTab.OnPlayGame += HandlePlayGame;
-        LevelManager.OnLevelCompleted += () => ChangeGameState(GameStateType.Complete);
-        LevelManager.OnLevelFailed += () => ChangeGameState(GameStateType.Fail);
+        Observer.Subscribe(ObserverEvent.PlayGame, HandlePlayGame);
+        Observer.Subscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
+        Observer.Subscribe(ObserverEvent.LevelFailed, HandleLevelFailed);
     }
 
     private void OnDisable()
     {
-        HomeTab.OnPlayGame -= HandlePlayGame;
+        Observer.Unsubscribe(ObserverEvent.PlayGame, HandlePlayGame);
+        Observer.Unsubscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
+        Observer.Unsubscribe(ObserverEvent.LevelFailed, HandleLevelFailed);
     }
 
     private void Start()
@@ -46,5 +48,15 @@ public class GameManager : MonoBehaviour
     private void HandlePlayGame()
     {
         ChangeGameState(GameStateType.Play);
+    }
+
+    private void HandleLevelCompleted()
+    {
+        ChangeGameState(GameStateType.Complete);
+    }
+
+    private void HandleLevelFailed()
+    {
+        ChangeGameState(GameStateType.Fail);
     }
 }

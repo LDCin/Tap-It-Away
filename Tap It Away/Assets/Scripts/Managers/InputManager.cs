@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class InputManager : Singleton<InputManager>
 {
-    public static event Action<CubeMover> OnTapCube;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private CastConfig castConfig;
     [SerializeField, Range(0.1f, 30f)] private float dragThreshHold = 20f;
@@ -95,7 +94,7 @@ public class InputManager : Singleton<InputManager>
     {
         if (!isDragging && selectedCube != null)
         {
-            OnTapCube?.Invoke(selectedCube);
+            Observer.Publish(ObserverEvent.TapCube, selectedCube);
             selectedCube.MoveOut();
         }
         ResetTouch();

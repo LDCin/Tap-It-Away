@@ -887,7 +887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a157eccd66845e4688b7c42fc5480d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
-  cubePrefab: {fileID: 4705002411133471821, guid: 46dc9a54b5aaba04fa0390ff56ea3e1b, type: 3}
+  cubePrefab: {fileID: 7269799704898870328, guid: e50661f03ac208f43ae8b859c9d205ce, type: 3}
   spawnRoot: {fileID: 934567464}
 --- !u!1 &1357460560
 GameObject:

@@ -9,7 +9,7 @@ public class GhostCubeBooster : BoosterBase
     private int currentCount = 0;
     public GhostCubeBooster(BoosterSO boosterSO) : base(boosterSO)
     {
-        CubeMover.OnCubeRemoved += Handle;
+        Observer.Subscribe(ObserverEvent.CubeRemoved, Handle);
     }
     public override async UniTask Active()
     {
@@ -17,7 +17,7 @@ public class GhostCubeBooster : BoosterBase
         List<CubeMover> cubeMoverList = new(LevelManager.Instance.LevelCubeList);
         foreach (var cubeMover in cubeMoverList)
         {
-            Cube cube = cubeMover.gameObject.GetComponent<Cube>();
+            CubeVisual cube = cubeMover.gameObject.GetComponent<CubeVisual>();
             // cube.SetOpacity(ghostOpacity);
             cube.SetCubeGhostVisual();
             cubeMover.SetGhost(true);
@@ -37,6 +37,6 @@ public class GhostCubeBooster : BoosterBase
     }
     public void Dispose()
     {
-        CubeMover.OnCubeRemoved -= Handle;
+        Observer.Unsubscribe(ObserverEvent.CubeRemoved, Handle);
     }
 }
