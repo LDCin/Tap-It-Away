@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 public class PlayGameState : IState
 {
@@ -150,10 +151,19 @@ public class LoadingGameState : IState
 		this.gameManager = gameManager;
 		this.inputManager = inputManager;
 	}
-	public void Enter()
+	public async void Enter()
 	{
 		inputManager.LockInput();
-		UIManager.Instance.OpenPanel(GameConfig.LOADING_PANEL);
+		await UIManager.Instance.OpenPanelAsync(GameConfig.LOADING_PANEL);
+
+		LoadingPanel loadingPanel = UIManager.Instance.GetPanel(GameConfig.LOADING_PANEL) as LoadingPanel;
+		float fillDuration = loadingPanel != null ? loadingPanel.FillDuration : 0f;
+
+		UniTask loadLevelTask = LevelManager.Instance.StartLevel(false);
+		UniTask fillTask = UniTask.Delay(TimeSpan.FromSeconds(fillDuration));
+
+		await UniTask.WhenAll(loadLevelTask, fillTask);
+		Observer.Publish(ObserverEvent.LevelLoaded);
 	}
 
 	public void Excute()

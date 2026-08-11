@@ -10,7 +10,8 @@ public class GameManager : MonoBehaviour
     private StateMachine stateMachine;
     private void OnEnable()
     {
-        Observer.Subscribe(ObserverEvent.PlayGame, HandlePlayGame);
+        Observer.Subscribe(ObserverEvent.PlayGame, HandleLoadingGame);
+        Observer.Subscribe(ObserverEvent.LevelLoaded, HandleLevelLoaded);
         Observer.Subscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
         Observer.Subscribe(ObserverEvent.LevelFailed, HandleLevelFailed);
         Observer.Subscribe(ObserverEvent.OnOpenSettingInGame, HandleOpenSettingInGame);
@@ -20,7 +21,9 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
-        Observer.Unsubscribe(ObserverEvent.PlayGame, HandlePlayGame);
+        Observer.Unsubscribe(ObserverEvent.PlayGame, HandleLoadingGame);
+        Observer.Unsubscribe(ObserverEvent.LevelLoaded, HandleLevelLoaded);
+        Observer.Unsubscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
         Observer.Unsubscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
         Observer.Unsubscribe(ObserverEvent.LevelFailed, HandleLevelFailed);
         Observer.Unsubscribe(ObserverEvent.OnOpenSettingInGame, HandleOpenSettingInGame);
@@ -51,9 +54,12 @@ public class GameManager : MonoBehaviour
     {
         stateMachine.Excute();
     }
-    private async void HandlePlayGame()
+    private void HandleLoadingGame()
     {
-        await LevelManager.Instance.StartLevel();
+        ChangeGameState(GameStateType.Loading);
+    }
+    private void HandleLevelLoaded()
+    {
         ChangeGameState(GameStateType.Play);
     }
 

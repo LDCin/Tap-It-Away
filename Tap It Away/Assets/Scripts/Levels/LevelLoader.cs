@@ -23,12 +23,20 @@ public class LevelLoader : MonoBehaviour
     }
     public void SpawnLevel(TextAsset levelDataFile)
     {
+        if (cubeList == null)
+        {
+            cubeList = new();
+        }
+
+        cubeList.Clear();
+
         LevelData levelData = LoadLevelFromTextAsset(levelDataFile);
         foreach (var cube in levelData.cubes)
         {
             CubeVisual newCube = Instantiate(cubePrefab, spawnRoot.transform);
             newCube.InitByCubeData(cube, spawnRoot.transform);
             newCube.transform.localPosition = cube.position;
+            cubeList.Add(newCube.gameObject.GetComponent<CubeMover>());
         }
     }
     public async UniTask SpawnLevelFromJsonAsync(string jsonFileName)
@@ -44,12 +52,20 @@ public class LevelLoader : MonoBehaviour
         }
 
         LevelData levelData = JsonConvert.DeserializeObject<LevelData>(handle.Result.text);
+        if (cubeList == null)
+        {
+            cubeList = new();
+        }
+
+        cubeList.Clear();
+
         foreach (var cube in levelData.cubes)
         {
             CubeVisual newCube = Instantiate(cubePrefab, spawnRoot.transform);
             newCube.InitByCubeData(cube, spawnRoot.transform);
             cubeList.Add(newCube.gameObject.GetComponent<CubeMover>());
         }
+
         Addressables.Release(handle);
     }
     public void DestroyLevel()
