@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 4641953625241863962}
   - component: {fileID: 8201724594692731086}
   - component: {fileID: 7496466065052306983}
+  - component: {fileID: 4083650133765048054}
   m_Layer: 5
   m_Name: Button - Setting
   m_TagString: Untagged
@@ -500,7 +501,45 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8201724594692731086}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -5116389453096995}
+        m_TargetAssemblyTypeName: GameplayPanel, Assembly-CSharp
+        m_MethodName: OpenSettingInGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &4083650133765048054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2578150251177796673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051e562490984e74ba1cc52ca6ca7c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonEffect
+  autoPlay: 1
+  deltaTimeIndependent: 0
+  useClosePanelEffect: 1
+  showDelayTime: 0
+  hidePanelDelayTime: 0
+  useScaleEffect: 1
+  scaleFactor: 0.95
+  scaleDuration: 0.1
+  useRotationEffect: 0
+  rotationAngle: 360
+  rotationDuration: 0.3
+  useVibrationEffect: 1
+  useCooldown: 0
+  cooldownDuration: 0.5
 --- !u!1 &4765090648487412223
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,6 +919,7 @@ GameObject:
   - component: {fileID: 9192313665535517313}
   - component: {fileID: 5444110585251556172}
   - component: {fileID: 6772036239576438912}
+  - component: {fileID: 1828730006305624776}
   m_Layer: 5
   m_Name: Button - Toggle Theme
   m_TagString: Untagged
@@ -988,6 +1028,32 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1828730006305624776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8051310149371432791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051e562490984e74ba1cc52ca6ca7c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonEffect
+  autoPlay: 1
+  deltaTimeIndependent: 0
+  useClosePanelEffect: 1
+  showDelayTime: 0
+  hidePanelDelayTime: 0
+  useScaleEffect: 1
+  scaleFactor: 0.95
+  scaleDuration: 0.1
+  useRotationEffect: 0
+  rotationAngle: 360
+  rotationDuration: 0.3
+  useVibrationEffect: 1
+  useCooldown: 0
+  cooldownDuration: 0.5
 --- !u!1 &8203992829448639818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1049,13 +1115,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameplayPanel
   _destroyOnClose: 0
-  hasEffectOnOpen: 0
-  hasEffectOnClose: 0
   uiLayer: 0
   heartRoot: {fileID: 2562722480755422708}
   heartPrefab: {fileID: 6595555318466795516, guid: 7742685d5ab63894c8267080901beb27, type: 3}
   heartSprite: {fileID: 21300000, guid: 39d4d7d281d69cf4fa649e3010d70c2f, type: 3}
   brokenHeartSprite: {fileID: 21300000, guid: 9bd0582f5d493db43834b8643f5d8a80, type: 3}
+  heartFallDistance: 100
+  heartFallDuration: 2
   levelText: {fileID: 3860175838184123112}
 --- !u!114 &8751627857966164435
 MonoBehaviour:

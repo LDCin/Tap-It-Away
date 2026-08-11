@@ -22,6 +22,7 @@ public class GameplayPanel : Panel
     [Header("Booster")]
     private Button boosterButtonPrefab;
     private List<Button> boosters;
+
     private void OnEnable()
     {
         Observer.Subscribe(ObserverEvent.CubeBlocked, BreakHeart);
@@ -45,7 +46,7 @@ public class GameplayPanel : Panel
         }
         levelText.text = LevelManager.Instance.LevelName;
     }
-    public void BreakHeart()
+    private void BreakHeart()
     {
         Image heart = hearts[hearts.Count - 1];
         RectTransform rect = heart.GetComponent<RectTransform>();
@@ -60,4 +61,9 @@ public class GameplayPanel : Panel
             // heart.gameObject.SetActive(false);
         });
     }
+    public void OpenSettingInGame()
+    {
+        Observer.Publish(ObserverEvent.OnOpenSettingInGame);
+    }
+    
 }

@@ -9,6 +9,40 @@ public class UserData
     public int level;
     public int coins;
     public List<UserBoosterData> userBoosterDataList = new();
+    public UserSettingData userSettingData = new();
+    public bool BGMEnabled
+    {
+        get
+        {
+            return userSettingData.bgmEnabled;
+        }
+        set
+        {
+            userSettingData.bgmEnabled = value;
+        }
+    }
+    public bool SFXEnabled
+    {
+        get
+        {
+            return userSettingData.sfxEnabled;
+        }
+        set
+        {
+            userSettingData.sfxEnabled = value;
+        }
+    }
+    public bool HapticEnabled
+    {
+        get
+        {
+            return userSettingData.hapticEnabled;
+        }
+        set
+        {
+            userSettingData.hapticEnabled = value;
+        }
+    }
 }
 
 [Serializable]
@@ -24,4 +58,12 @@ public class UserBoosterData
         this.isUnlocked = isUnlocked;
         this.count = count;
     }
+}
+
+[Serializable]
+public class UserSettingData
+{
+    public bool bgmEnabled;
+    public bool sfxEnabled;
+    public bool hapticEnabled;
 }

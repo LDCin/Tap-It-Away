@@ -1,16 +1,18 @@
 using DG.Tweening;
 using UnityEngine;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class UIPanelEffect : UIEffect
 {
-    [SerializeField] private RectTransform panel;
     [SerializeField] private float duration = 0.4f;
     [SerializeField] private bool canInteractWhileFading = true;
-    private CanvasGroup _canvasGroup;
+    private RectTransform panel;
+    private CanvasGroup canvasGroup;
 
     private void Awake()
     {
-        _canvasGroup = GetComponent<CanvasGroup>();
+        canvasGroup = GetComponent<CanvasGroup>();
+        panel = GetComponent<RectTransform>();
     }
 
     public override float ClosePanelDuration => duration;
@@ -19,20 +21,20 @@ public class UIPanelEffect : UIEffect
     {
         base.ShowEffect(showDelayTime);
 
-        if (_canvasGroup == null)
+        if (canvasGroup == null)
         {
-            _canvasGroup = GetComponent<CanvasGroup>();
+            canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        _canvasGroup.DOKill();
+        canvasGroup.DOKill();
 
         panel.transform.DOKill();
 
-        _canvasGroup.interactable = canInteractWhileFading;
+        canvasGroup.interactable = canInteractWhileFading;
 
-        _canvasGroup.alpha = 0;
+        canvasGroup.alpha = 0;
 
-        _canvasGroup.DOFade(1, duration).SetUpdate(deltaTimeIndependent).OnComplete(FinishShowEffect).SetDelay(showDelayTime);
+        canvasGroup.DOFade(1, duration).SetUpdate(deltaTimeIndependent).OnComplete(FinishShowEffect).SetDelay(showDelayTime);
 
         panel.transform.localScale = Vector3.one * 0.8f;
         panel.transform.DOScale(1, duration).SetUpdate(deltaTimeIndependent).SetDelay(showDelayTime).SetEase(Ease.OutBack);
@@ -41,14 +43,14 @@ public class UIPanelEffect : UIEffect
     public override void FinishShowEffect()
     {
         base.FinishShowEffect();
-        _canvasGroup.interactable = true;
+        canvasGroup.interactable = true;
     }
 
     public override void HideEffect(float hideDelayTime)
     {
         base.HideEffect(hideDelayTime);
 
-        _canvasGroup.DOFade(0, duration).SetDelay(hideDelayTime).SetUpdate(deltaTimeIndependent);
+        canvasGroup.DOFade(0, duration).SetDelay(hideDelayTime).SetUpdate(deltaTimeIndependent);
 
         panel.transform.DOScale(0.8f, duration).SetUpdate(deltaTimeIndependent).SetDelay(hideDelayTime).SetEase(Ease.InBack);
     }

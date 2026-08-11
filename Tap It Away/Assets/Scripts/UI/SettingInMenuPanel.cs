@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,20 +12,71 @@ public class SettingInMenuPanel : Panel
     [SerializeField] private Sprite offSFXSprite;
     [SerializeField] private Sprite onHapticSprite;
     [SerializeField] private Sprite offHapticSprite;
+
+    public override void UpdateVisual()
+    {
+        UpdateToggleSprites();
+    }
+
     public void CloseSetting()
     {
-        UIManager.Instance.ClosePanel(GameConfig.SETTING_IN_MENU_PANEL);
+        Close();
     }
+
     public void ToggleBGM()
     {
-
+        DataManager.Instance?.ToggleBgmEnabled();
+        UpdateToggleSprites();
     }
+
     public void ToggleSFX()
     {
-
+        DataManager.Instance?.ToggleSfxEnabled();
+        UpdateToggleSprites();
     }
+
     public void ToggleHaptic()
     {
+        DataManager.Instance?.ToggleHapticEnabled();
+        UpdateToggleSprites();
+    }
 
+    private void UpdateToggleSprites()
+    {
+        DataManager dataManager = DataManager.Instance;
+        bool bgmEnabled = dataManager == null || dataManager.BgmEnabled;
+        bool sfxEnabled = dataManager == null || dataManager.SfxEnabled;
+        bool hapticEnabled = dataManager == null || dataManager.HapticEnabled;
+
+        SetButtonSprite(BGMButton, bgmEnabled ? onBGMSprite : offBGMSprite);
+        SetButtonSprite(SFXButton, sfxEnabled ? onSFXSprite : offSFXSprite);
+        SetButtonSprite(HapticButton, hapticEnabled ? onHapticSprite : offHapticSprite);
+    }
+
+    private void SetButtonSprite(Button button, Sprite sprite)
+    {
+        if (button == null || sprite == null)
+        {
+            return;
+        }
+
+        Image image = button.image;
+        if (image == null || image.color.a <= 0f)
+        {
+            Image[] childImages = button.GetComponentsInChildren<Image>(true);
+            foreach (Image childImage in childImages)
+            {
+                if (childImage != image)
+                {
+                    image = childImage;
+                    break;
+                }
+            }
+        }
+
+        if (image != null)
+        {
+            image.sprite = sprite;
+        }
     }
 }

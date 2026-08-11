@@ -34,29 +34,28 @@ public class LevelManager : Singleton<LevelManager>
         Observer.Unsubscribe(ObserverEvent.CubeBlocked, HandleCubeBlocked);
     }
     [ContextMenu("Test Start Level")]
-    private async UniTask StartLevel()
+    public async UniTask StartLevel()
     {
-        {
+        levelCubeList.Clear();
 #if UNITY_EDITOR
-            if (useLevelFileToTest)
-            {
-                levelLoader.SpawnLevel(levelDataFile);
-                return;
-            }
-#endif
-            levelName = DataManager.Instance.GetCurrentLevelName();
-            if (string.IsNullOrEmpty(levelName))
-            {
-                return;
-            }
-
-            await levelLoader.SpawnLevelFromJsonAsync(levelName);
-            CurrentLevelState = new LevelState(levelLoader.GetCubeCount(), maxHeart);
-            levelCubeList = new(levelLoader.CubeList);
-            Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
-            Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
-            Observer.Publish(ObserverEvent.LevelLoaded);
+        if (useLevelFileToTest)
+        {
+            levelLoader.SpawnLevel(levelDataFile);
+            return;
         }
+#endif
+        levelName = DataManager.Instance.GetCurrentLevelName();
+        if (string.IsNullOrEmpty(levelName))
+        {
+            return;
+        }
+        await levelLoader.SpawnLevelFromJsonAsync(levelName);
+        CurrentLevelState = new LevelState(levelLoader.GetCubeCount(), maxHeart);
+        levelCubeList = new(levelLoader.CubeList);
+        Debug.Log("Current Level:" + levelName);
+        Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
+        Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
+        Observer.Publish(ObserverEvent.LevelLoaded);
     }
     public void HandleCubeRemoved()
     {

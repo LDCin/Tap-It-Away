@@ -2,7 +2,6 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using System.Collections;
-// using NUnit.Framework;
 
 public class CubeMover : MonoBehaviour
 {

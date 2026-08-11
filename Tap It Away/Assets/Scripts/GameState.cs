@@ -13,9 +13,12 @@ public class PlayGameState : IState
 	public void Enter()
 	{
 		inputManager.UnlockInput();
-		LevelManager.Instance.PlayGame();
-		
-		UIManager.Instance.OpenPanel(GameConfig.GAMEPLAY_PANEL);
+		Panel gameplayPanel = UIManager.Instance.GetPanel(GameConfig.GAMEPLAY_PANEL);
+
+		if (gameplayPanel == null || !gameplayPanel.gameObject.activeSelf)
+		{
+			UIManager.Instance.OpenPanel(GameConfig.GAMEPLAY_PANEL);
+		}
 	}
 
 	public void Excute()
@@ -25,7 +28,7 @@ public class PlayGameState : IState
 	public void Exit()
 	{
 		inputManager.LockInput();
-		UIManager.Instance.ClosePanel(GameConfig.GAMEPLAY_PANEL);
+		// UIManager.Instance.ClosePanel(GameConfig.GAMEPLAY_PANEL);
 	}
 }
 
@@ -95,6 +98,7 @@ public class MenuGameState : IState
 	public void Enter()
 	{
 		inputManager.LockInput();
+		UIManager.Instance.ClosePanel(GameConfig.GAMEPLAY_PANEL);
 		UIManager.Instance.OpenPanel(GameConfig.MENU_PANEL);
 	}
 

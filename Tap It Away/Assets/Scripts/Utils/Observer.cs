@@ -13,7 +13,11 @@ public enum ObserverEvent
     LevelCompleted,
     LevelFailed,
     LevelLoaded,
-    PlayGame
+    PlayGame,
+    OnOpenSettingInGame,
+    OnCloseSettingInGame,
+    OnBackToMenu,
+    OnSettingChanged
 }
 
 public static class Observer

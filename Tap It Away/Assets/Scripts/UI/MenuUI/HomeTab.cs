@@ -86,7 +86,7 @@ public class HomeTab : Panel
 
         if (playLevelText != null)
         {
-            playLevelText.text = $"Level {levelNumber}";
+            playLevelText.text = $"Level {levelNumber:00}";
         }
 
         if (playButtonImage == null)

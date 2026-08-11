@@ -299,6 +299,7 @@ GameObject:
   - component: {fileID: 7872937641683867235}
   - component: {fileID: 2244628102041889590}
   - component: {fileID: 2022706719150494935}
+  - component: {fileID: -5710197187478520222}
   m_Layer: 5
   m_Name: Panel - Fail
   m_TagString: Untagged
@@ -347,8 +348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FailPanel
   _destroyOnClose: 0
-  hasEffectOnOpen: 0
-  hasEffectOnClose: 0
   uiLayer: 0
 --- !u!114 &2022706719150494935
 MonoBehaviour:
@@ -380,6 +379,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-5710197187478520222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3247785499163313831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf8efc41e3b24682b315779451a6e514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIPanelEffect
+  autoPlay: 1
+  deltaTimeIndependent: 0
+  useClosePanelEffect: 1
+  showDelayTime: 0
+  hidePanelDelayTime: 0
+  panel: {fileID: 0}
+  duration: 0.4
+  canInteractWhileFading: 1
 --- !u!1 &4003953073734903183
 GameObject:
   m_ObjectHideFlags: 0
