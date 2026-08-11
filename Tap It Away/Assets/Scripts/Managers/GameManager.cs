@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private InputManager inputManager;
     [SerializeField] private GameStateType startGameStateType = GameStateType.Menu;
     private StateMachine stateMachine;
+    public GameStateType LoadingTargetState { get; private set; } = GameStateType.Play;
+    public bool LoadingShouldStartLevel { get; private set; }
     private void OnEnable()
     {
         Observer.Subscribe(ObserverEvent.PlayGame, HandleLoadingGame);
@@ -23,7 +25,6 @@ public class GameManager : MonoBehaviour
     {
         Observer.Unsubscribe(ObserverEvent.PlayGame, HandleLoadingGame);
         Observer.Unsubscribe(ObserverEvent.LevelLoaded, HandleLevelLoaded);
-        Observer.Unsubscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
         Observer.Unsubscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
         Observer.Unsubscribe(ObserverEvent.LevelFailed, HandleLevelFailed);
         Observer.Unsubscribe(ObserverEvent.OnOpenSettingInGame, HandleOpenSettingInGame);
@@ -56,6 +57,8 @@ public class GameManager : MonoBehaviour
     }
     private void HandleLoadingGame()
     {
+        LoadingTargetState = GameStateType.Play;
+        LoadingShouldStartLevel = true;
         ChangeGameState(GameStateType.Loading);
     }
     private void HandleLevelLoaded()
@@ -84,6 +87,13 @@ public class GameManager : MonoBehaviour
 
     private void HandleBackToMenu()
     {
-        ChangeGameState(GameStateType.Menu);
+        LoadingTargetState = GameStateType.Menu;
+        LoadingShouldStartLevel = false;
+        ChangeGameState(GameStateType.Loading);
+    }
+
+    public void CompleteLoading()
+    {
+        ChangeGameState(LoadingTargetState);
     }
 }

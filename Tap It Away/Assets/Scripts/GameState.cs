@@ -159,11 +159,13 @@ public class LoadingGameState : IState
 		LoadingPanel loadingPanel = UIManager.Instance.GetPanel(GameConfig.LOADING_PANEL) as LoadingPanel;
 		float fillDuration = loadingPanel != null ? loadingPanel.FillDuration : 0f;
 
-		UniTask loadLevelTask = LevelManager.Instance.StartLevel(false);
-		UniTask fillTask = UniTask.Delay(TimeSpan.FromSeconds(fillDuration));
+		if (gameManager.LoadingShouldStartLevel)
+		{
+			await LevelManager.Instance.StartLevel(false);
+		}
 
-		await UniTask.WhenAll(loadLevelTask, fillTask);
-		Observer.Publish(ObserverEvent.LevelLoaded);
+		await UniTask.Delay(TimeSpan.FromSeconds(fillDuration));
+		gameManager.CompleteLoading();
 	}
 
 	public void Excute()
