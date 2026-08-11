@@ -75,7 +75,6 @@ public class LevelManager : Singleton<LevelManager>
     {
         CurrentLevelState.LoseHeart();
         Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
-        Observer.Publish(ObserverEvent.HeartCountChanged, CurrentLevelState.RemainingHeartCount);
 
         if (CurrentLevelState.IsFailed)
         {

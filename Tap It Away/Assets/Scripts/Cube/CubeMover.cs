@@ -171,14 +171,7 @@ public class CubeMover : MonoBehaviour
         isShaking = false;
         SetGhost(false);
         EnableCollider();
-
         transform.localScale = originalScale;
-
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
 
         if (cubeVisual != null)
         {
