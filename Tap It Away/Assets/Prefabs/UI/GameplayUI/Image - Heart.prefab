@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3976248565227292825}
   - component: {fileID: 6583327985676347171}
   - component: {fileID: 6595555318466795516}
-  - component: {fileID: 1826213691633643488}
+  - component: {fileID: 8353834386955029771}
   m_Layer: 5
   m_Name: Image - Heart
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!225 &1826213691633643488
+--- !u!225 &8353834386955029771
 CanvasGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -29,7 +29,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         cubeList.Clear();
-
+        ResetTransform(spawnRoot.transform);
         LevelData levelData = LoadLevelFromTextAsset(levelDataFile);
         foreach (var cube in levelData.cubes)
         {
@@ -58,7 +58,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         cubeList.Clear();
-
+        ResetTransform(spawnRoot.transform);
         foreach (var cube in levelData.cubes)
         {
             CubeVisual newCube = Instantiate(cubePrefab, spawnRoot.transform);
@@ -68,8 +68,18 @@ public class LevelLoader : MonoBehaviour
 
         Addressables.Release(handle);
     }
+    public void ResetTransform(Transform target)
+    {
+        target.localPosition = Vector3.zero;
+        target.localRotation = Quaternion.identity;
+        target.localScale = Vector3.one;
+    }
     public void DestroyLevel()
     {
+        foreach (var cube in cubeList)
+        {
+            Destroy(cube.gameObject);
+        }
         cubeList.Clear();
     }
     public int GetCubeCount()

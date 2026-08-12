@@ -27,11 +27,13 @@ public class LevelManager : Singleton<LevelManager>
     {
         Observer.Subscribe(ObserverEvent.CubeRemoved, HandleCubeRemoved);
         Observer.Subscribe(ObserverEvent.CubeBlocked, HandleCubeBlocked);
+        Observer.Subscribe(ObserverEvent.OnBackToMenu, DestroyLevel);
     }
     private void OnDisable()
     {
         Observer.Unsubscribe(ObserverEvent.CubeRemoved, HandleCubeRemoved);
         Observer.Unsubscribe(ObserverEvent.CubeBlocked, HandleCubeBlocked);
+        Observer.Unsubscribe(ObserverEvent.OnBackToMenu, DestroyLevel);
     }
     [ContextMenu("Test Start Level")]
     public async UniTask StartLevel(bool publishLevelLoaded = true)
@@ -95,5 +97,8 @@ public class LevelManager : Singleton<LevelManager>
             Observer.Publish(ObserverEvent.LevelFailed);
         }
     }
-
+    public void DestroyLevel()
+    {
+        levelLoader.DestroyLevel();
+    }
 }
