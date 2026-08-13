@@ -119,6 +119,7 @@ public class UIManager : Singleton<UIManager>
 
         if (panel != null)
         {
+            panel.transform.SetAsLastSibling();
             panel.Open();
         }
         else

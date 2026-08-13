@@ -5,42 +5,108 @@ using UnityEngine;
 [Serializable]
 public class UserData
 {
-    public int map;
-    public int level;
-    public int coins;
+    [Min(0)] public int map;
+    [Min(1)] public int level;
+    [Min(0)] public int coins;
     public List<UserBoosterData> userBoosterDataList = new();
     public UserSettingData userSettingData = new();
+
+    public int GetMap()
+    {
+        return map;
+    }
+
+    public void SetMap(int map)
+    {
+        this.map = map;
+    }
+
+    public int GetLevel()
+    {
+        return level;
+    }
+
+    public void SetLevel(int level)
+    {
+        this.level = level;
+    }
+
+    public void AdvanceLevel()
+    {
+        level++;
+    }
+
+    public int GetCoins()
+    {
+        return coins;
+    }
+
+    public void SetCoins(int coins)
+    {
+        this.coins = coins;
+    }
+
+    public bool GetBgmEnabled()
+    {
+        return userSettingData.bgmEnabled;
+    }
+
+    public void SetBgmEnabled(bool enabled)
+    {
+        userSettingData.bgmEnabled = enabled;
+    }
+
+    public bool GetSfxEnabled()
+    {
+        return userSettingData.sfxEnabled;
+    }
+
+    public void SetSfxEnabled(bool enabled)
+    {
+        userSettingData.sfxEnabled = enabled;
+    }
+
+    public bool GetHapticEnabled()
+    {
+        return userSettingData.hapticEnabled;
+    }
+
+    public void SetHapticEnabled(bool enabled)
+    {
+        userSettingData.hapticEnabled = enabled;
+    }
+
     public bool BGMEnabled
     {
         get
         {
-            return userSettingData.bgmEnabled;
+            return GetBgmEnabled();
         }
         set
         {
-            userSettingData.bgmEnabled = value;
+            SetBgmEnabled(value);
         }
     }
     public bool SFXEnabled
     {
         get
         {
-            return userSettingData.sfxEnabled;
+            return GetSfxEnabled();
         }
         set
         {
-            userSettingData.sfxEnabled = value;
+            SetSfxEnabled(value);
         }
     }
     public bool HapticEnabled
     {
         get
         {
-            return userSettingData.hapticEnabled;
+            return GetHapticEnabled();
         }
         set
         {
-            userSettingData.hapticEnabled = value;
+            SetHapticEnabled(value);
         }
     }
 }

@@ -14,9 +14,9 @@ public class DataManager : Singleton<DataManager>
     [SerializeField] private TextAsset userDataFile;
     [SerializeField] private UserData userData = new();
     public UserData CurrentUserData => userData;
-    public bool BgmEnabled => userData == null || userData.userSettingData.bgmEnabled;
-    public bool SfxEnabled => userData == null || userData.userSettingData.sfxEnabled;
-    public bool HapticEnabled => userData == null || userData.userSettingData.hapticEnabled;
+    public bool BgmEnabled => userData == null || userData.GetBgmEnabled();
+    public bool SfxEnabled => userData == null || userData.GetSfxEnabled();
+    public bool HapticEnabled => userData == null || userData.GetHapticEnabled();
     private string UserDataSavePath => Path.Combine(Application.persistentDataPath, UserDataFileName);
 
     public override void Awake()
@@ -142,7 +142,7 @@ public class DataManager : Singleton<DataManager>
             return;
         }
 
-        userData.BGMEnabled = enabled;
+        userData.SetBgmEnabled(enabled);
         SaveUserData();
         Observer.Publish(ObserverEvent.OnSettingChanged);
     }
@@ -154,7 +154,7 @@ public class DataManager : Singleton<DataManager>
             return;
         }
 
-        userData.SFXEnabled = enabled;
+        userData.SetSfxEnabled(enabled);
         SaveUserData();
         Observer.Publish(ObserverEvent.OnSettingChanged);
     }
@@ -166,7 +166,7 @@ public class DataManager : Singleton<DataManager>
             return;
         }
 
-        userData.HapticEnabled = enabled;
+        userData.SetHapticEnabled(enabled);
         SaveUserData();
         Observer.Publish(ObserverEvent.OnSettingChanged);
     }
@@ -230,7 +230,7 @@ public class DataManager : Singleton<DataManager>
             return;
         }
 
-        userData.level++;
+        userData.AdvanceLevel();
         SaveUserData();
     }
 
@@ -247,7 +247,7 @@ public class DataManager : Singleton<DataManager>
             return 1;
         }
 
-        return (userData.map - 1) * 10 + userData.level;
+        return (userData.GetMap() - 1) * 10 + userData.GetLevel();
     }
 
     public string GetCurrentLevelDisplayName()
@@ -268,8 +268,8 @@ public class DataManager : Singleton<DataManager>
             return string.Empty;
         }
 
-        int mapNumber = userData.map;
-        int levelNumber = userData.level;
+        int mapNumber = userData.GetMap();
+        int levelNumber = userData.GetLevel();
         string fileName = $"Level {mapNumber}-{levelNumber}";
         Debug.Log("Current level: " + fileName);
         return fileName;

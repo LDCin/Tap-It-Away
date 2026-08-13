@@ -91,11 +91,15 @@ public class CubeMover : MonoBehaviour
         }
         StartPosition = transform.position;
         Vector3 directionVector = CubeDirectionHelper.GetWorldDirection(CubeDirection, transform);
+        if (CanMove())
+        {
+            boxCollider.enabled = false;
+            Observer.Publish(ObserverEvent.CubeRemoved);
+        }
         Move(transform.position + directionVector * moveDistance, true, OnMoveOutCompleted);
     }
     private void OnMoveOutCompleted()
     {
-        Observer.Publish(ObserverEvent.CubeRemoved);
         Destroy(gameObject);
     }
     private void ReturnToStartPosition()

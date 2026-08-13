@@ -1,5 +1,14 @@
 {
   "map": 1,
-  "level": 3,
-  "coin": 100
+  "level": 1,
+  "coins": 0,
+  "userBoosterDataList": [],
+  "userSettingData": {
+    "bgmEnabled": false,
+    "sfxEnabled": false,
+    "hapticEnabled": false
+  },
+  "BGMEnabled": false,
+  "SFXEnabled": false,
+  "HapticEnabled": false
 }

@@ -1171,8 +1171,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   userDataFile: {fileID: 4900000, guid: 9ba3953e483d72e42a0eb781513ac90a, type: 3}
   userData:
-    map: 0
-    level: 0
+    map: 1
+    level: 1
     coins: 0
     userBoosterDataList: []
     userSettingData:

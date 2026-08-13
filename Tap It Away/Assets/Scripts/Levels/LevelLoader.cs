@@ -76,8 +76,17 @@ public class LevelLoader : MonoBehaviour
     }
     public void DestroyLevel()
     {
+        if (cubeList == null || cubeList.Count <= 0)
+        {
+            return;
+        }
         foreach (var cube in cubeList)
         {
+            if (cube == null)
+            {
+                continue;
+            }
+
             Destroy(cube.gameObject);
         }
         cubeList.Clear();

@@ -53,7 +53,7 @@ public class HomeTab : Panel
             return;
         }
 
-        currentLevelNumber = Mathf.Max(1, userData.level);
+        currentLevelNumber = Mathf.Max(1, userData.GetLevel());
     }
 
     private void RefreshLevelTree()
