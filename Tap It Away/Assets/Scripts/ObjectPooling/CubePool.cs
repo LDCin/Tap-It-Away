@@ -8,7 +8,7 @@ public class CubePool : MonoBehaviour
     [SerializeField, Min(0)] private int initialSize = 32;
     [SerializeField] private Transform inactiveRoot;
 
-    private readonly HashSet<Cube> pooledCubes = new();
+    private readonly HashSet<Cube> returnedCubes = new();
     private ObjectPool<Cube> pool;
 
     private void Awake()
@@ -48,12 +48,12 @@ public class CubePool : MonoBehaviour
 
     public void ReturnCube(Cube cube)
     {
-        if (pooledCubes.Contains(cube))
+        if (returnedCubes.Contains(cube))
         {
             return;
         }
 
-        pooledCubes.Add(cube);
+        returnedCubes.Add(cube);
         pool.Return(cube);
     }
 
@@ -90,7 +90,7 @@ public class CubePool : MonoBehaviour
         }
 
         Cube cube = pool.Rent();
-        pooledCubes.Remove(cube);
+        returnedCubes.Remove(cube);
         return cube;
     }
 
