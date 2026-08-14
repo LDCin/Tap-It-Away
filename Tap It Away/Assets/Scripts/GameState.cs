@@ -1,4 +1,6 @@
 using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 public class PlayGameState : IState
 {
@@ -10,11 +12,13 @@ public class PlayGameState : IState
 		this.gameManager = gameManager;
 		this.inputManager = inputManager;
 	}
-	public void Enter()
+	public async void Enter()
 	{
 		inputManager.UnlockInput();
-		LevelManager.Instance.PlayGame();
 		UIManager.Instance.OpenPanel(GameConfig.GAMEPLAY_PANEL, true);
+		LoadingPanel loadingPanel = UIManager.Instance.GetPanel(GameConfig.LOADING_PANEL) as LoadingPanel;
+		await new WaitUntil(() => loadingPanel.IsDone);
+		LevelManager.Instance.PlayGame();
 	}
 
 	public void Excute()

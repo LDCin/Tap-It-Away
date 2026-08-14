@@ -8,9 +8,6 @@ using UnityEditor;
 
 public class DataManager : Singleton<DataManager>
 {
-    public static event System.Action OnSettingsChanged;
-    public static event System.Action<int> OnCoinsChanged;
-
     private const string UserDataFileName = "user_data.json";
 
     [SerializeField] private TextAsset userDataFile;
@@ -146,7 +143,7 @@ public class DataManager : Singleton<DataManager>
 
         userData.bgmEnabled = enabled;
         SaveUserData();
-        OnSettingsChanged?.Invoke();
+        Observer.Publish(ObserverEvent.OnSettingChanged);
     }
 
     public void SetSfxEnabled(bool enabled)
@@ -158,7 +155,7 @@ public class DataManager : Singleton<DataManager>
 
         userData.sfxEnabled = enabled;
         SaveUserData();
-        OnSettingsChanged?.Invoke();
+        Observer.Publish(ObserverEvent.OnSettingChanged);
     }
 
     public void SetHapticEnabled(bool enabled)
@@ -170,7 +167,7 @@ public class DataManager : Singleton<DataManager>
 
         userData.hapticEnabled = enabled;
         SaveUserData();
-        OnSettingsChanged?.Invoke();
+        Observer.Publish(ObserverEvent.OnSettingChanged);
     }
 
     public void ToggleBgmEnabled()
@@ -217,7 +214,7 @@ public class DataManager : Singleton<DataManager>
 
         userData.coins += amount;
         SaveUserData();
-        OnCoinsChanged?.Invoke(userData.coins);
+        Observer.Publish(ObserverEvent.CoinCountChanged, userData.coins);
     }
 
     public void AdvanceToNextLevel()

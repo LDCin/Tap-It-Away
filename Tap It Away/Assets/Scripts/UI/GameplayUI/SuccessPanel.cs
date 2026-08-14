@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class SuccessPanel : Panel
 {
-    public static event Action OnNextLevel;
-
     [SerializeField] private Image congratulationTextImage;
     [SerializeField] private List<Sprite> congratulationTextSprites;
     [SerializeField] private TMP_Text levelText;
@@ -24,13 +22,13 @@ public class SuccessPanel : Panel
 
     private void OnEnable()
     {
-        DataManager.OnCoinsChanged += UpdateCoinText;
+        Observer.Subscribe<int>(ObserverEvent.CoinCountChanged, UpdateCoinText);
         isCoinRewardClaimed = false;
     }
 
     private void OnDisable()
     {
-        DataManager.OnCoinsChanged -= UpdateCoinText;
+        Observer.Unsubscribe<int>(ObserverEvent.CoinCountChanged, UpdateCoinText);
     }
 
     public override void UpdateVisual()
@@ -55,7 +53,7 @@ public class SuccessPanel : Panel
     private void ContinueToNextLevel()
     {
         LevelManager.Instance.DestroyLevel();
-        OnNextLevel?.Invoke();
+        Observer.Publish(ObserverEvent.PlayGame);
     }
 
     private void ShowRandomCongratulationText()

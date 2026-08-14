@@ -15,12 +15,12 @@ public class SettingInMenuPanel : Panel
 
     private void OnEnable()
     {
-        DataManager.OnSettingsChanged += UpdateAudioButtons;
+        Observer.Subscribe(ObserverEvent.OnSettingChanged, UpdateAudioButtons);
     }
 
     private void OnDisable()
     {
-        DataManager.OnSettingsChanged -= UpdateAudioButtons;
+        Observer.Unsubscribe(ObserverEvent.OnSettingChanged, UpdateAudioButtons);
     }
 
     public override void UpdateVisual()

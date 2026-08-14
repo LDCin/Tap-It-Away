@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,8 +5,6 @@ using UnityEngine.UI;
 
 public class HomeTab : Panel
 {
-    public static event Action OnPlayGame;
-
     [SerializeField] private List<LevelTreeNode> levelTreeNodes;
     [SerializeField] private Panel noAdsPanel;
     [Header("Play Button")]
@@ -23,18 +20,17 @@ public class HomeTab : Panel
 
     private void OnEnable()
     {
-        DataManager.OnCoinsChanged += UpdateCoinText;
-        LoadCurrentLevel();
-        UpdateVisual();
+        Observer.Subscribe<int>(ObserverEvent.CoinCountChanged, UpdateCoinText);
     }
 
     private void OnDisable()
     {
-        DataManager.OnCoinsChanged -= UpdateCoinText;
+        Observer.Unsubscribe<int>(ObserverEvent.CoinCountChanged, UpdateCoinText);
     }
 
     public override void UpdateVisual()
     {
+        LoadCurrentLevel();
         RefreshLevelTree();
         RefreshPlayButton();
         UpdateCoinText(DataManager.Instance != null ? DataManager.Instance.GetCoins() : 0);
@@ -42,7 +38,7 @@ public class HomeTab : Panel
 
     public void OnPlayButtonClicked()
     {
-        OnPlayGame?.Invoke();
+        Observer.Publish(ObserverEvent.PlayGame);
     }
 
     public void OnSettingButtonClicked()
@@ -68,6 +64,7 @@ public class HomeTab : Panel
 
     private void RefreshLevelTree()
     {
+        int currentLevelNumber = DataManager.Instance.GetCurrentLevelNumber();
         for (int i = 0; i < levelTreeNodes.Count; i++)
         {
             LevelTreeNode node = levelTreeNodes[i];

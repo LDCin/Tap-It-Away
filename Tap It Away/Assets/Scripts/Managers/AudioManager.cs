@@ -33,20 +33,20 @@ public class AudioManager : Singleton<AudioManager>
 
     private void OnEnable()
     {
-        DataManager.OnSettingsChanged += ApplySettingsFromUserData;
-        InputManager.OnTapCube += HandleTapCube;
-        CubeMover.OnCubeBlock += PlayCubeBlockSound;
-        LevelManager.OnLevelCompleted += PlayLevelSuccessSound;
-        LevelManager.OnLevelFailed += PlayLevelFailSound;
+        Observer.Subscribe(ObserverEvent.OnSettingChanged, ApplySettingsFromUserData);
+        Observer.Subscribe<CubeMover>(ObserverEvent.TapCube, HandleTapCube);
+        Observer.Subscribe(ObserverEvent.CubeBlocked, PlayCubeBlockSound);
+        Observer.Subscribe(ObserverEvent.LevelCompleted, PlayLevelSuccessSound);
+        Observer.Subscribe(ObserverEvent.LevelFailed, PlayLevelFailSound);
     }
 
     private void OnDisable()
     {
-        DataManager.OnSettingsChanged -= ApplySettingsFromUserData;
-        InputManager.OnTapCube -= HandleTapCube;
-        CubeMover.OnCubeBlock -= PlayCubeBlockSound;
-        LevelManager.OnLevelCompleted -= PlayLevelSuccessSound;
-        LevelManager.OnLevelFailed -= PlayLevelFailSound;
+        Observer.Unsubscribe(ObserverEvent.OnSettingChanged, ApplySettingsFromUserData);
+        Observer.Unsubscribe<CubeMover>(ObserverEvent.TapCube, HandleTapCube);
+        Observer.Unsubscribe(ObserverEvent.CubeBlocked, PlayCubeBlockSound);
+        Observer.Unsubscribe(ObserverEvent.LevelCompleted, PlayLevelSuccessSound);
+        Observer.Unsubscribe(ObserverEvent.LevelFailed, PlayLevelFailSound);
     }
 
     private void ApplySettingsFromUserData()

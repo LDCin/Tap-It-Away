@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingPanel
   _destroyOnClose: 0
-  uiLayer: 0
+  uiLayer: 2
   backgroundImage: {fileID: 1695936470097191619}
   progress: {fileID: 1030698800146498414}
   loadingDuration: 1

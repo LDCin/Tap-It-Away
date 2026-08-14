@@ -1,11 +1,8 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameThemeController : Singleton<GameThemeController>
 {
-    public static event Action<GameThemeSO> OnThemeChanged;
-
     [SerializeField] private GameThemeSO lightTheme;
     [SerializeField] private GameThemeSO darkTheme;
     [SerializeField] private GameThemeType currentThemeType = GameThemeType.Light;
@@ -75,7 +72,7 @@ public class GameThemeController : Singleton<GameThemeController>
     {
         GameThemeSO theme = CurrentTheme;
         ApplyBackgrounds(theme);
-        OnThemeChanged?.Invoke(theme);
+        Observer.Publish(ObserverEvent.ThemeChanged, theme);
     }
 
     private void ApplyBackgrounds(GameThemeSO theme)

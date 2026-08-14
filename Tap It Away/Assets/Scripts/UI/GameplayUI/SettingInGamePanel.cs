@@ -1,11 +1,8 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SettingInGamePanel : Panel
 {
-    public static event Action OnBackToMenu;
-
     [SerializeField] private Button BGMButton;
     [SerializeField] private Button SFXButton;
     [SerializeField] private Button HapticButton;
@@ -18,12 +15,12 @@ public class SettingInGamePanel : Panel
 
     private void OnEnable()
     {
-        DataManager.OnSettingsChanged += UpdateSettingButtons;
+        Observer.Subscribe(ObserverEvent.OnSettingChanged, UpdateSettingButtons);
     }
 
     private void OnDisable()
     {
-        DataManager.OnSettingsChanged -= UpdateSettingButtons;
+        Observer.Unsubscribe(ObserverEvent.OnSettingChanged, UpdateSettingButtons);
     }
 
     public override void UpdateVisual()
@@ -34,12 +31,13 @@ public class SettingInGamePanel : Panel
     public void BackToMenu()
     {
         LevelManager.Instance.DestroyLevel();
-        OnBackToMenu?.Invoke();
+        Observer.Publish(ObserverEvent.OnBackToMenu);
     }
 
     public void CloseSettingInGame()
     {
         UIManager.Instance.ClosePanel(GameConfig.SETTING_IN_GAME_PANEL);
+        Observer.Publish(ObserverEvent.OnCloseSettingInGame);
     }
 
     public void ToggleBGM()

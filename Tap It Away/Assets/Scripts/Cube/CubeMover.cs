@@ -2,15 +2,10 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using System.Collections;
-using ObjectPool;
 // using NUnit.Framework;
 
 public class CubeMover : MonoBehaviour
 {
-    public static event Action OnCubeBlock;
-    public static event Action OnCubeRemoved;
-    public static event Action<CubeMover> OnCubeRemovedWithReference;
-    public static event Action<CubeMover> OnCubeReturnedWithReference;
     [SerializeField] private float moveSpeed = 1;
     [SerializeField] private float moveDistance = 50;
     // [SerializeField] private float collisionSkin = 0.02f;
@@ -127,8 +122,8 @@ public class CubeMover : MonoBehaviour
         }
 
         CacheOriginalParent();
-        RemoveFromLevelList();
         DetachFromPuzzleRoot();
+        RemoveFromLevelList();
 
         StartPosition = transform.position;
         Vector3 directionVector = CubeDirectionHelper.GetWorldDirection(CubeDirection, transform);
@@ -158,7 +153,7 @@ public class CubeMover : MonoBehaviour
         }
 
         isRemovedFromLevelState = true;
-        OnCubeRemoved?.Invoke();
+        Observer.Publish(ObserverEvent.CubeRemoved);
     }
 
     private void RemoveFromLevelList()
@@ -169,7 +164,7 @@ public class CubeMover : MonoBehaviour
         }
 
         isRemovedFromLevelList = true;
-        OnCubeRemovedWithReference?.Invoke(this);
+        Observer.Publish(ObserverEvent.OnCubeMove, this);
     }
     private void DetachFromPuzzleRoot()
     {
@@ -200,7 +195,7 @@ public class CubeMover : MonoBehaviour
         DisableTrail();
         ReattachToPuzzleRoot();
         isRemovedFromLevelList = false;
-        OnCubeReturnedWithReference?.Invoke(this);
+        Observer.Publish(ObserverEvent.OnCubeMove, this);
     }
     private void ReattachToPuzzleRoot()
     {
@@ -287,7 +282,7 @@ public class CubeMover : MonoBehaviour
         if (!isBlocked)
         {
             isBlocked = true;
-            OnCubeBlock?.Invoke();
+            Observer.Publish(ObserverEvent.CubeBlocked);
         }
         // tween?.Kill();
         ReturnToStartPosition();

@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -10,20 +9,18 @@ public class GameManager : MonoBehaviour
     private StateMachine stateMachine;
     private void OnEnable()
     {
-        HomeTab.OnPlayGame += HandlePlayGame;
-        SuccessPanel.OnNextLevel += HandleNextLevel;
-        FailPanel.OnRestart += HandleRestart;
-        SettingInGamePanel.OnBackToMenu += HandleBackToMenu;
-        LevelManager.OnLevelCompleted += () => ChangeGameState(GameStateType.Complete);
-        LevelManager.OnLevelFailed += () => ChangeGameState(GameStateType.Fail);
+        Observer.Subscribe(ObserverEvent.PlayGame, HandlePlayGame);
+        Observer.Subscribe(ObserverEvent.OnBackToMenu, HandleBackToMenu);
+        Observer.Subscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
+        Observer.Subscribe(ObserverEvent.LevelFailed, HandleLevelFailed);
     }
 
     private void OnDisable()
     {
-        HomeTab.OnPlayGame -= HandlePlayGame;
-        SuccessPanel.OnNextLevel -= HandleNextLevel;
-        FailPanel.OnRestart -= HandleRestart;
-        SettingInGamePanel.OnBackToMenu -= HandleBackToMenu;
+        Observer.Unsubscribe(ObserverEvent.PlayGame, HandlePlayGame);
+        Observer.Unsubscribe(ObserverEvent.OnBackToMenu, HandleBackToMenu);
+        Observer.Unsubscribe(ObserverEvent.LevelCompleted, HandleLevelCompleted);
+        Observer.Unsubscribe(ObserverEvent.LevelFailed, HandleLevelFailed);
     }
 
     private void Start()
@@ -54,18 +51,18 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameStateType.Play);
     }
 
-    private void HandleNextLevel()
-    {
-        ChangeGameState(GameStateType.Play);
-    }
-
-    private void HandleRestart()
-    {
-        ChangeGameState(GameStateType.Play);
-    }
-
     private void HandleBackToMenu()
     {
         ChangeGameState(GameStateType.Menu);
+    }
+
+    private void HandleLevelCompleted()
+    {
+        ChangeGameState(GameStateType.Complete);
+    }
+
+    private void HandleLevelFailed()
+    {
+        ChangeGameState(GameStateType.Fail);
     }
 }

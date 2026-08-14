@@ -9,8 +9,6 @@ using UnityEngine.UI;
 
 public class GameplayPanel : Panel
 {
-    public static event Action<BoosterType> OnBoosterActive;
-
     [Header("Theme")]
     [SerializeField] private Button themeToggleButton;
     [SerializeField] private Sprite lightThemeToggleSprite;
@@ -38,9 +36,9 @@ public class GameplayPanel : Panel
 
     private void OnEnable()
     {
-        LevelManager.OnCubeCountChanged += HandleCubeCountChanged;
-        LevelManager.OnHeartCountChanged += HandleHeartCountChanged;
-        GameThemeController.OnThemeChanged += ApplyTheme;
+        Observer.Subscribe<int>(ObserverEvent.CubeCountChanged, HandleCubeCountChanged);
+        Observer.Subscribe<int>(ObserverEvent.HeartCountChanged, HandleHeartCountChanged);
+        Observer.Subscribe<GameThemeSO>(ObserverEvent.ThemeChanged, ApplyTheme);
         if (themeToggleButton != null)
         {
             themeToggleButton.onClick.AddListener(ToggleTheme);
@@ -49,9 +47,9 @@ public class GameplayPanel : Panel
 
     private void OnDisable()
     {
-        LevelManager.OnCubeCountChanged -= HandleCubeCountChanged;
-        LevelManager.OnHeartCountChanged -= HandleHeartCountChanged;
-        GameThemeController.OnThemeChanged -= ApplyTheme;
+        Observer.Unsubscribe<int>(ObserverEvent.CubeCountChanged, HandleCubeCountChanged);
+        Observer.Unsubscribe<int>(ObserverEvent.HeartCountChanged, HandleHeartCountChanged);
+        Observer.Unsubscribe<GameThemeSO>(ObserverEvent.ThemeChanged, ApplyTheme);
         if (themeToggleButton != null)
         {
             themeToggleButton.onClick.RemoveListener(ToggleTheme);
@@ -88,6 +86,7 @@ public class GameplayPanel : Panel
     public void OpenSettingInGame()
     {
         UIManager.Instance?.OpenPanel(GameConfig.SETTING_IN_GAME_PANEL);
+        Observer.Publish(ObserverEvent.OnOpenSettingInGame);
     }
 
     private void ApplyTheme(GameThemeSO _)
@@ -214,7 +213,7 @@ public class GameplayPanel : Panel
 
             boosterButton.onClick.AddListener(() =>
             {
-                OnBoosterActive?.Invoke(boosterType);
+                Observer.Publish(ObserverEvent.BoosterActive, boosterType);
             });
 
             boosters.Add(boosterButton);

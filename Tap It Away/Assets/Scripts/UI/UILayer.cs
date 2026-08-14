@@ -1,5 +1,6 @@
 public enum UILayer
 {
     Overlay,
-    Camera
+    Camera,
+    Loading
 }

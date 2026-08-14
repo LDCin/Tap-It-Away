@@ -16,7 +16,7 @@ public class GhostCubeBooster : BoosterBase
         currentCount = activeCount;
         ghostCubeList.Clear();
         usedGhostCubeList.Clear();
-        InputManager.OnTapCube += HandleCubeTapped;
+        Observer.Subscribe<CubeMover>(ObserverEvent.TapCube, HandleCubeTapped);
 
         List<CubeMover> cubeMoverList = new(LevelManager.Instance.LevelCubeList);
         foreach (var cubeMover in cubeMoverList)
@@ -38,7 +38,7 @@ public class GhostCubeBooster : BoosterBase
         }
 
         await UniTask.WaitUntil(() => currentCount <= 0);
-        InputManager.OnTapCube -= HandleCubeTapped;
+        Observer.Unsubscribe<CubeMover>(ObserverEvent.TapCube, HandleCubeTapped);
     }
 
     private void HandleCubeTapped(CubeMover cubeMover)
@@ -76,6 +76,6 @@ public class GhostCubeBooster : BoosterBase
     }
     public void Dispose()
     {
-        InputManager.OnTapCube -= HandleCubeTapped;
+        Observer.Unsubscribe<CubeMover>(ObserverEvent.TapCube, HandleCubeTapped);
     }
 }

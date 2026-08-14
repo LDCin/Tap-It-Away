@@ -1,11 +1,8 @@
-using System;
 using TMPro;
 using UnityEngine;
 
 public class FailPanel : Panel
 {
-    public static event Action OnRestart;
-
     [SerializeField] private TextMeshProUGUI levelText;
 
     public override void UpdateVisual()
@@ -35,6 +32,6 @@ public class FailPanel : Panel
     {
         AudioManager.Instance?.StopCurrentSFX();
         LevelManager.Instance.DestroyLevel();
-        OnRestart?.Invoke();
+        Observer.Publish(ObserverEvent.PlayGame);
     }
 }

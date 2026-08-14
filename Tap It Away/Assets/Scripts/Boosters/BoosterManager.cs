@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class BoosterManager : Singleton<BoosterManager>
 {
-    public static event Action<BoosterType, int> OnBoosterCountChanged;
-
     private BoosterLoader boosterLoader;
     private Dictionary<BoosterType, (BoosterBase, BoosterSO)> boosterDict;
     private List<BoosterType> unlockedBoosters = new();
@@ -69,12 +66,12 @@ public class BoosterManager : Singleton<BoosterManager>
 
     private void OnEnable()
     {
-        GameplayPanel.OnBoosterActive += HandleBoosterActive;
+        Observer.Subscribe<BoosterType>(ObserverEvent.BoosterActive, HandleBoosterActive);
     }
 
     private void OnDisable()
     {
-        GameplayPanel.OnBoosterActive -= HandleBoosterActive;
+        Observer.Unsubscribe<BoosterType>(ObserverEvent.BoosterActive, HandleBoosterActive);
     }
 
     private async void HandleBoosterActive(BoosterType boosterType)
@@ -112,13 +109,13 @@ public class BoosterManager : Singleton<BoosterManager>
         UserBoosterData boosterData = GetUserBoosterData(boosterType);
         if (boosterData == null || boosterData.count <= 0)
         {
-            OnBoosterCountChanged?.Invoke(boosterType, 0);
+            Observer.Publish(ObserverEvent.BoosterCountChanged, boosterType);
             return false;
         }
 
         boosterData.count--;
         DataManager.Instance.SaveUserData();
-        OnBoosterCountChanged?.Invoke(boosterType, boosterData.count);
+        Observer.Publish(ObserverEvent.BoosterCountChanged, boosterType);
         return true;
     }
 

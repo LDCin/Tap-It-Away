@@ -1,119 +1,119 @@
 using System.Collections.Generic;
+using uPools;
 using UnityEngine;
 
-namespace ObjectPool
+public class CubePool : MonoBehaviour
 {
-    public class CubePool : Singleton<CubePool>
+    [SerializeField] private Cube cubePrefab;
+    [SerializeField, Min(0)] private int initialSize = 32;
+    [SerializeField] private Transform inactiveRoot;
+
+    private readonly HashSet<Cube> pooledCubes = new();
+    private ObjectPool<Cube> pool;
+
+    private void Awake()
     {
-        [SerializeField] private Cube cubePrefab;
-        [SerializeField, Min(0)] private int initialSize = 32;
-        [SerializeField] private Transform inactiveRoot;
-
-        private readonly Queue<Cube> pool = new();
-        private readonly HashSet<Cube> pooledCubes = new();
-
-        public override void Awake()
+        if (inactiveRoot == null)
         {
-            base.Awake();
-            if (Instance != this)
-            {
-                return;
-            }
-
-            if (inactiveRoot == null)
-            {
-                inactiveRoot = transform;
-            }
-
-            InitializePool();
+            inactiveRoot = transform;
         }
 
-        public Cube GetCube(CubeData cubeData, Transform parent)
+        InitializePool();
+    }
+
+    public Cube GetCube(CubeData cubeData, Transform parent)
+    {
+        Cube cube = GetInactiveCube();
+        if (cube == null)
         {
-            Cube cube = GetInactiveCube();
-            if (cube == null)
-            {
-                return null;
-            }
-
-            pooledCubes.Remove(cube);
-
-            Transform cubeTransform = cube.transform;
-            cubeTransform.SetParent(parent, false);
-            cubeTransform.localRotation = Quaternion.identity;
-            cubeTransform.localScale = Vector3.one;
-            cube.gameObject.SetActive(true);
-
-            CubeMover cubeMover = cube.GetComponent<CubeMover>();
-            if (cubeMover != null)
-            {
-                cubeMover.SetPool(this);
-                cubeMover.ResetForSpawn();
-            }
-
-            cube.InitByCubeData(cubeData);
-            return cube;
+            return null;
         }
 
-        public void ReturnCube(Cube cube)
+        Transform cubeTransform = cube.transform;
+        cubeTransform.SetParent(parent, false);
+        cubeTransform.localRotation = Quaternion.identity;
+        cubeTransform.localScale = Vector3.one;
+        cube.gameObject.SetActive(true);
+
+        CubeMover cubeMover = cube.GetComponent<CubeMover>();
+        if (cubeMover != null)
         {
-            if (cube == null)
-            {
-                return;
-            }
-
-            if (pooledCubes.Contains(cube))
-            {
-                return;
-            }
-
-            CubeMover cubeMover = cube.GetComponent<CubeMover>();
-            if (cubeMover != null)
-            {
-                cubeMover.ResetForPool();
-            }
-
-            cube.ResetForPool();
-            cube.transform.SetParent(inactiveRoot, false);
-            cube.gameObject.SetActive(false);
-            pool.Enqueue(cube);
-            pooledCubes.Add(cube);
+            cubeMover.SetPool(this);
+            cubeMover.ResetForSpawn();
         }
 
-        private void InitializePool()
+        cube.InitByCubeData(cubeData);
+        return cube;
+    }
+
+    public void ReturnCube(Cube cube)
+    {
+        if (cube == null)
         {
-            for (int i = 0; i < initialSize; i++)
-            {
-                Cube cube = CreateCube();
-                ReturnCube(cube);
-            }
+            return;
         }
 
-        private Cube CreateCube()
+        if (pooledCubes.Contains(cube))
         {
-            if (cubePrefab == null)
-            {
-                Debug.LogError("CubePool: Cube prefab is missing.");
-                return null;
-            }
-
-            Cube cube = Instantiate(cubePrefab, inactiveRoot);
-            cube.gameObject.SetActive(false);
-            return cube;
+            return;
         }
 
-        private Cube GetInactiveCube()
-        {
-            while (pool.Count > 0)
-            {
-                Cube cube = pool.Dequeue();
-                if (cube != null)
-                {
-                    return cube;
-                }
-            }
+        pooledCubes.Add(cube);
+        pool.Return(cube);
+    }
 
-            return CreateCube();
+    private void InitializePool()
+    {
+        if (cubePrefab == null)
+        {
+            Debug.LogError("CubePool: Cube prefab is missing.");
+            return;
         }
+
+        pool = new ObjectPool<Cube>(
+            CreateCube,
+            null,
+            ResetAndHideCube,
+            cube => Destroy(cube.gameObject)
+        );
+
+        pool.Prewarm(initialSize);
+    }
+
+    private Cube CreateCube()
+    {
+        Cube cube = Instantiate(cubePrefab, inactiveRoot);
+        cube.gameObject.SetActive(false);
+        return cube;
+    }
+
+    private Cube GetInactiveCube()
+    {
+        if (pool == null)
+        {
+            return null;
+        }
+
+        Cube cube = pool.Rent();
+        pooledCubes.Remove(cube);
+        return cube;
+    }
+
+    private void ResetAndHideCube(Cube cube)
+    {
+        CubeMover cubeMover = cube.GetComponent<CubeMover>();
+        if (cubeMover != null)
+        {
+            cubeMover.ResetForPool();
+        }
+
+        cube.ResetForPool();
+        cube.transform.SetParent(inactiveRoot, false);
+        cube.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        pool?.Dispose();
     }
 }

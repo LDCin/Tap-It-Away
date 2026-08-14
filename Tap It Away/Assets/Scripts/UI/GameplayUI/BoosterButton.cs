@@ -18,14 +18,14 @@ public class BoosterButton : Button
     protected override void OnEnable()
     {
         base.OnEnable();
-        BoosterManager.OnBoosterCountChanged += HandleBoosterCountChanged;
-        GameThemeController.OnThemeChanged += ApplyTheme;
+        Observer.Subscribe<BoosterType>(ObserverEvent.BoosterCountChanged, HandleBoosterCountChanged);
+        Observer.Subscribe<GameThemeSO>(ObserverEvent.ThemeChanged, ApplyTheme);
     }
 
     protected override void OnDisable()
     {
-        BoosterManager.OnBoosterCountChanged -= HandleBoosterCountChanged;
-        GameThemeController.OnThemeChanged -= ApplyTheme;
+        Observer.Unsubscribe<BoosterType>(ObserverEvent.BoosterCountChanged, HandleBoosterCountChanged);
+        Observer.Unsubscribe<GameThemeSO>(ObserverEvent.ThemeChanged, ApplyTheme);
         base.OnDisable();
     }
 
@@ -50,14 +50,14 @@ public class BoosterButton : Button
         backgroundImage.sprite = theme.boosterButtonSprite;
     }
 
-    private void HandleBoosterCountChanged(BoosterType boosterType, int count)
+    private void HandleBoosterCountChanged(BoosterType boosterType)
     {
         if (this.boosterType != boosterType)
         {
             return;
         }
 
-        SetCount(count);
+        SetCount(BoosterManager.Instance.GetBoosterCount(boosterType));
     }
 
     private void SetCount(int count)

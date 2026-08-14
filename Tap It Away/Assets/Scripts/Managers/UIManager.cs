@@ -9,7 +9,7 @@ public class UIManager : Singleton<UIManager>
     [Header("UI Roots")]
     [SerializeField] private Transform overlayCanvasRoot;
     [SerializeField] private Transform cameraCanvasRoot;
-
+    [SerializeField] private Transform loadingCanvasRoot;
     private Dictionary<string, Panel> _panelDict = new();
     private HashSet<string> _loadingPanels = new();
 
@@ -38,6 +38,7 @@ public class UIManager : Singleton<UIManager>
         {
             UILayer.Overlay => overlayCanvasRoot,
             UILayer.Camera => cameraCanvasRoot,
+            UILayer.Loading => loadingCanvasRoot,
             _ => overlayCanvasRoot
         };
     }
@@ -134,7 +135,6 @@ public class UIManager : Singleton<UIManager>
             await UniTask.WaitUntil(() => loadingPanel.IsDone);
         }
 
-        SetBackgroundTypeForPanel(panelName);
         await OpenPanelInternalAsync(panelName);
 
         if (loadingPanel != null)

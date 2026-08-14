@@ -1,16 +1,10 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public class LevelManager : Singleton<LevelManager>
 {
-    public static event Action<int> OnCubeCountChanged;
-    public static event Action<int> OnHeartCountChanged;
-    public static event Action OnLevelCompleted;
-    public static event Action OnLevelFailed;
-    public static event Action OnLevelLoaded;
     [SerializeField] private LevelLoader levelLoader;
 #if UNITY_EDITOR
     [SerializeField] private TextAsset levelDataFile;
@@ -34,17 +28,15 @@ public class LevelManager : Singleton<LevelManager>
     }
     private void OnEnable()
     {
-        CubeMover.OnCubeRemovedWithReference += HandleCubeRemovedFromList;
-        CubeMover.OnCubeReturnedWithReference += HandleCubeReturnedToList;
-        CubeMover.OnCubeRemoved += HandleCubeRemoved;
-        CubeMover.OnCubeBlock += HandleCubeBlocked;
+        Observer.Subscribe<CubeMover>(ObserverEvent.OnCubeMove, HandleCubeMoved);
+        Observer.Subscribe(ObserverEvent.CubeRemoved, HandleCubeRemoved);
+        Observer.Subscribe(ObserverEvent.CubeBlocked, HandleCubeBlocked);
     }
     private void OnDisable()
     {
-        CubeMover.OnCubeRemovedWithReference -= HandleCubeRemovedFromList;
-        CubeMover.OnCubeReturnedWithReference -= HandleCubeReturnedToList;
-        CubeMover.OnCubeRemoved -= HandleCubeRemoved;
-        CubeMover.OnCubeBlock -= HandleCubeBlocked;
+        Observer.Unsubscribe<CubeMover>(ObserverEvent.OnCubeMove, HandleCubeMoved);
+        Observer.Unsubscribe(ObserverEvent.CubeRemoved, HandleCubeRemoved);
+        Observer.Unsubscribe(ObserverEvent.CubeBlocked, HandleCubeBlocked);
     }
     [ContextMenu("Test Start Level")]
     private async UniTask StartLevel()
@@ -72,20 +64,20 @@ public class LevelManager : Singleton<LevelManager>
             isLevelCompletedSaved = false;
             Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
             Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
-            OnLevelLoaded?.Invoke();
+            Observer.Publish(ObserverEvent.LevelLoaded);
         }
     }
     public void HandleCubeRemoved()
     {
         CurrentLevelState.RemoveCube();
         Debug.Log("Remaining Cube: " + CurrentLevelState.RemainingCubeCount);
-        OnCubeCountChanged?.Invoke(CurrentLevelState.RemainingCubeCount);
+        Observer.Publish(ObserverEvent.CubeCountChanged, CurrentLevelState.RemainingCubeCount);
 
         if (CurrentLevelState.IsCompleted)
         {
             Debug.Log("Win game");
             SaveCompletedLevel();
-            OnLevelCompleted?.Invoke();
+            Observer.Publish(ObserverEvent.LevelCompleted);
         }
     }
 
@@ -108,31 +100,35 @@ public class LevelManager : Singleton<LevelManager>
         CurrentLevelState = null;
     }
 
-    private void HandleCubeRemovedFromList(CubeMover cubeMover)
+    private void HandleCubeMoved(CubeMover cubeMover)
     {
-        levelCubeList?.Remove(cubeMover);
-    }
-
-    private void HandleCubeReturnedToList(CubeMover cubeMover)
-    {
-        if (levelCubeList == null || cubeMover == null || levelCubeList.Contains(cubeMover))
+        if (levelCubeList == null || cubeMover == null)
         {
             return;
         }
 
-        levelCubeList.Add(cubeMover);
+        if (cubeMover.transform.parent == null)
+        {
+            levelCubeList.Remove(cubeMover);
+            return;
+        }
+
+        if (!levelCubeList.Contains(cubeMover))
+        {
+            levelCubeList.Add(cubeMover);
+        }
     }
 
     public void HandleCubeBlocked()
     {
         CurrentLevelState.LoseHeart();
         Debug.Log("Remaining Heart: " + CurrentLevelState.RemainingHeartCount);
-        OnHeartCountChanged?.Invoke(CurrentLevelState.RemainingHeartCount);
+        Observer.Publish(ObserverEvent.HeartCountChanged, CurrentLevelState.RemainingHeartCount);
 
         if (CurrentLevelState.IsFailed)
         {
             Debug.Log("Lose game");
-            OnLevelFailed?.Invoke();
+            Observer.Publish(ObserverEvent.LevelFailed);
         }
     }
 

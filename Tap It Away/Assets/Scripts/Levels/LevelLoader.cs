@@ -4,7 +4,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
-using ObjectPool;
+
 public class LevelLoader : MonoBehaviour
 {
     [SerializeField] private Cube cubePrefab;
@@ -176,6 +176,6 @@ public class LevelLoader : MonoBehaviour
 
     private CubePool GetCubePool()
     {
-        return cubePool != null ? cubePool : CubePool.Instance;
+        return cubePool;
     }
 }
