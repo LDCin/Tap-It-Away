@@ -155,7 +155,6 @@ public class LoadingGameState : IState
 	public void Enter()
 	{
 		inputManager.LockInput();
-		GameThemeController.Instance?.SetBackgroundType(GameThemeBackgroundType.Menu);
 		UIManager.Instance.OpenPanel(GameConfig.LOADING_PANEL);
 	}
 

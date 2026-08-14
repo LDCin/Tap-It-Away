@@ -169,7 +169,10 @@ public class UIManager : Singleton<UIManager>
         {
             return;
         }
-
+        if (panelName != GameConfig.GAMEPLAY_PANEL && panelName != GameConfig.MENU_PANEL)
+        {
+            return;
+        }
         GameThemeBackgroundType backgroundType = panelName == GameConfig.GAMEPLAY_PANEL
             ? GameThemeBackgroundType.Gameplay
             : GameThemeBackgroundType.Menu;
