@@ -48,11 +48,6 @@ public class CubePool : MonoBehaviour
 
     public void ReturnCube(Cube cube)
     {
-        if (cube == null)
-        {
-            return;
-        }
-
         if (pooledCubes.Contains(cube))
         {
             return;

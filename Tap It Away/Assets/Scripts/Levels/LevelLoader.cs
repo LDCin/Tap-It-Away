@@ -7,20 +7,18 @@ using System.Collections.Generic;
 
 public class LevelLoader : MonoBehaviour
 {
-    [SerializeField] private Cube cubePrefab;
     [SerializeField] private CubePool cubePool;
     [SerializeField] private GameObject spawnRoot;
     private List<CubeMover> cubeList;
-    private Vector3 spawnRootInitialLocalPosition;
-    private Quaternion spawnRootInitialLocalRotation;
-    private Vector3 spawnRootInitialLocalScale;
+    [SerializeField] private Vector3 spawnRootInitialLocalPosition = Vector3.zero;
+    [SerializeField] private Quaternion spawnRootInitialLocalRotation = Quaternion.identity;
+    [SerializeField] private Vector3 spawnRootInitialLocalScale = Vector3.one;
     public List<CubeMover> CubeList => cubeList;
     private void Awake()
     {
         cubeList = new();
-        CacheSpawnRootTransform();
     }
-    [ContextMenu("Test Load Level From TA")]
+    [ContextMenu("Test Load Level From Text Asset")]
     public LevelData LoadLevelFromTextAsset(TextAsset levelFile)
     {
         LevelData levelData = JsonConvert.DeserializeObject<LevelData>(levelFile.text);
@@ -67,11 +65,10 @@ public class LevelLoader : MonoBehaviour
 
         foreach (CubeMover cubeMover in cubeList)
         {
-            ReturnOrDestroyCube(cubeMover);
+            ReturnCube(cubeMover);
         }
 
         cubeList.Clear();
-        DestroyRemainingSpawnRootChildren();
         ResetSpawnRootTransform();
     }
     public int GetCubeCount()
@@ -79,18 +76,18 @@ public class LevelLoader : MonoBehaviour
         return cubeList.Count;
     }
 
-    private void CacheSpawnRootTransform()
-    {
-        if (spawnRoot == null)
-        {
-            return;
-        }
+    // private void CacheSpawnRootTransform()
+    // {
+    //     if (spawnRoot == null)
+    //     {
+    //         return;
+    //     }
 
-        Transform rootTransform = spawnRoot.transform;
-        spawnRootInitialLocalPosition = rootTransform.localPosition;
-        spawnRootInitialLocalRotation = rootTransform.localRotation;
-        spawnRootInitialLocalScale = rootTransform.localScale;
-    }
+    //     Transform rootTransform = spawnRoot.transform;
+    //     spawnRootInitialLocalPosition = rootTransform.localPosition;
+    //     spawnRootInitialLocalRotation = rootTransform.localRotation;
+    //     spawnRootInitialLocalScale = rootTransform.localScale;
+    // }
 
     public void ResetSpawnRootTransform()
     {
@@ -105,58 +102,19 @@ public class LevelLoader : MonoBehaviour
         rootTransform.localScale = spawnRootInitialLocalScale;
     }
 
-    private void DestroyRemainingSpawnRootChildren()
-    {
-        if (spawnRoot == null)
-        {
-            return;
-        }
-
-        Transform rootTransform = spawnRoot.transform;
-        for (int i = rootTransform.childCount - 1; i >= 0; i--)
-        {
-            ReturnOrDestroyChild(rootTransform.GetChild(i));
-        }
-    }
-
-    private void ReturnOrDestroyChild(Transform child)
-    {
-        if (child == null)
-        {
-            return;
-        }
-
-        CubeMover cubeMover = child.GetComponent<CubeMover>();
-        if (cubeMover != null)
-        {
-            ReturnOrDestroyCube(cubeMover);
-            return;
-        }
-
-        Destroy(child.gameObject);
-    }
-
     private void SpawnCube(CubeData cubeData)
     {
-        CubePool activeCubePool = GetCubePool();
-        Cube newCube = activeCubePool != null
-            ? activeCubePool.GetCube(cubeData, spawnRoot.transform)
-            : Instantiate(cubePrefab, spawnRoot.transform);
+        Cube newCube = cubePool.GetCube(cubeData, spawnRoot.transform);
 
         if (newCube == null)
         {
             return;
         }
 
-        if (activeCubePool == null)
-        {
-            newCube.InitByCubeData(cubeData);
-        }
-
         cubeList.Add(newCube.GetComponent<CubeMover>());
     }
 
-    private void ReturnOrDestroyCube(CubeMover cubeMover)
+    private void ReturnCube(CubeMover cubeMover)
     {
         if (cubeMover == null)
         {
@@ -164,18 +122,9 @@ public class LevelLoader : MonoBehaviour
         }
 
         Cube cube = cubeMover.GetComponent<Cube>();
-        CubePool activeCubePool = GetCubePool();
-        if (activeCubePool != null && cube != null)
+        if (cube != null)
         {
-            activeCubePool.ReturnCube(cube);
-            return;
+            cubePool.ReturnCube(cube);
         }
-
-        Destroy(cubeMover.gameObject);
-    }
-
-    private CubePool GetCubePool()
-    {
-        return cubePool;
     }
 }

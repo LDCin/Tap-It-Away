@@ -42,7 +42,7 @@ public class LevelManager : Singleton<LevelManager>
     private async UniTask StartLevel()
     {
         {
-            InputManager.Instance?.ResetPuzzleRootTransform();
+            // InputManager.Instance?.ResetPuzzleRootTransform();
 #if UNITY_EDITOR
             if (useLevelFileToTest)
             {

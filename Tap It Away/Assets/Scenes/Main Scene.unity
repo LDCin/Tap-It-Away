@@ -381,12 +381,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e689fefec6c39b84fa7563e31251a582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelCameraFovController
-  targetCamera: {fileID: 330585545}
-  puzzleRoot: {fileID: 934567465}
-  cubeSize: 1
-  padding: 1.5
-  minFov: 35
-  maxFov: 75
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,7 +904,7 @@ Transform:
   m_GameObject: {fileID: 934567464}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -960,9 +954,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a157eccd66845e4688b7c42fc5480d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
-  cubePrefab: {fileID: -6461839634741941231, guid: e181a1a50d9a8b44fb3aadbc76dffa04, type: 3}
   cubePool: {fileID: 595332500}
   spawnRoot: {fileID: 934567464}
+  spawnRootInitialLocalPosition: {x: 0, y: -3, z: 0}
+  spawnRootInitialLocalRotation: {x: 0, y: 0, z: 0, w: 0}
+  spawnRootInitialLocalScale: {x: 1, y: 1, z: 1}
 --- !u!1 &1357460560
 GameObject:
   m_ObjectHideFlags: 0

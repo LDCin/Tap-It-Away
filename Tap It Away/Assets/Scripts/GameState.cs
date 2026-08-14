@@ -15,6 +15,7 @@ public class PlayGameState : IState
 	public async void Enter()
 	{
 		inputManager.UnlockInput();
+		inputManager.ResetPuzzleRootTransform();
 		UIManager.Instance.OpenPanel(GameConfig.GAMEPLAY_PANEL, true);
 		LoadingPanel loadingPanel = UIManager.Instance.GetPanel(GameConfig.LOADING_PANEL) as LoadingPanel;
 		await new WaitUntil(() => loadingPanel.IsDone);
