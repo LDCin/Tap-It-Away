@@ -19,10 +19,10 @@ public abstract class Panel : MonoBehaviour
         gameObject.SetActive(true);
         UpdateVisual();
     }
-    public virtual void UpdateVisual()
-    {
-        Debug.Log(gameObject.name + " Update Visual");
-    }
+    public abstract void UpdateVisual();
+    // {
+        // Debug.Log(gameObject.name + " Update Visual");
+    // }
     public void Close()
     {
         if (!gameObject.activeInHierarchy)

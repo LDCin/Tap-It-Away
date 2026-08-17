@@ -12,7 +12,10 @@ public class TutorialPanel : Panel
     public void Init(BoosterType boosterType)
     {
         this.boosterType = boosterType;
-
+        UpdateVisual();
+    }
+    public override void UpdateVisual()
+    {
         BoosterSO boosterSO = BoosterManager.Instance != null
             ? BoosterManager.Instance.GetBoosterSO(boosterType)
             : null;
@@ -28,7 +31,6 @@ public class TutorialPanel : Panel
             descriptionText.text = boosterSO != null ? boosterSO.description : string.Empty;
         }
     }
-
     public void Claim()
     {
         BoosterManager.Instance?.MarkBoosterTutorialShown(boosterType);

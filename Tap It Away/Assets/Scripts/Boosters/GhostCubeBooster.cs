@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
-public class GhostCubeBooster : BoosterBase
+public class GhostCubeBooster : BoosterBase, IDeactivatableBooster
 {
     private int currentCount = 0;
     private List<CubeMover> ghostCubeList = new();
@@ -53,7 +53,7 @@ public class GhostCubeBooster : BoosterBase
             usedGhostCubeList.Add(cubeMover);
         }
     }
-    public override void Deactive()
+    public void Deactive()
     {
         foreach (var cubeMover in ghostCubeList)
         {

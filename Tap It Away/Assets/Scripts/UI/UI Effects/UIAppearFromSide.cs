@@ -19,7 +19,7 @@ public class UIAppearFromSide : UIEffect
 
     public override void ShowEffect(float showDelayTime)
     {
-        base.ShowEffect(showDelayTime);
+        // base.ShowEffect(showDelayTime);
         if(_canvasGroup == null)
         {
             _canvasGroup = GetComponent<CanvasGroup>();
@@ -48,7 +48,7 @@ public class UIAppearFromSide : UIEffect
 
     public override void HideEffect(float hideDelayTime)
     {
-        base.HideEffect(hideDelayTime);
+        // base.HideEffect(hideDelayTime);
 
         if(_canvasGroup == null)
         {

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ToggleButton : UIEffect
+public class ToggleButton
 {
     [SerializeField] private Image icon;
     [SerializeField] private Sprite iconOn;

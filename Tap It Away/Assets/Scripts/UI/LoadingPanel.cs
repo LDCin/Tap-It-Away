@@ -14,7 +14,7 @@ public class LoadingPanel : Panel
 
     public override void UpdateVisual()
     {
-        base.UpdateVisual();
+        // base.UpdateVisual();
         ApplyTheme(GameThemeController.Instance != null ? GameThemeController.Instance.CurrentTheme : null);
         StartLoading();
     }

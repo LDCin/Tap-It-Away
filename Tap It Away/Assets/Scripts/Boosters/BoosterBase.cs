@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 public abstract class BoosterBase
 {
@@ -9,16 +6,18 @@ public abstract class BoosterBase
     protected bool deactive = false;
     protected BoosterType boosterType;
     protected BoosterSO boosterSO;
+
     public async UniTask StartBooster()
     {
         await Active();
-        if (deactive)
+        if (deactive && this is IDeactivatableBooster deactivatableBooster)
         {
-            Deactive();
+            deactivatableBooster.Deactive();
         }
     }
+
     public abstract UniTask Active();
-    public abstract void Deactive();
+    
     public BoosterBase(BoosterSO boosterSO)
     {
         this.boosterSO = boosterSO;

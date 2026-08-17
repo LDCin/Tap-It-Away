@@ -30,10 +30,6 @@ public class HintBooster : BoosterBase
 
         return UniTask.CompletedTask;
     }
-    public override void Deactive()
-    {
-        throw new System.NotImplementedException();
-    }
     public void PlayHintEffect()
     {
         foreach (var cube in movableCubeList)
@@ -47,9 +43,5 @@ public class HintBooster : BoosterBase
             // Destroy(cube.gameObject);
             cube.ShakeCube(true);
         }
-    }
-    public void Dispose()
-    {
-        
     }
 }
